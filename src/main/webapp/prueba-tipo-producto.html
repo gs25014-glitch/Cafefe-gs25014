@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba Tipo Producto</title>
+</head>
+<body>
+
+<h1>Crear tipo de producto</h1>
+
+<form method="POST" action="tipos-producto">
+
+    <label>Nombre:</label>
+    <input type="text" name="nombre" required>
+
+    <br><br>
+
+    <label>Activo:</label>
+    <select name="activo">
+        <option value="true">Sí</option>
+        <option value="false">No</option>
+    </select>
+
+    <br><br>
+
+    <label>Observaciones:</label>
+    <input type="text" name="observaciones">
+
+    <br><br>
+
+    <button type="submit">Crear tipo de producto</button>
+
+</form>
+
+</body>
+</html>

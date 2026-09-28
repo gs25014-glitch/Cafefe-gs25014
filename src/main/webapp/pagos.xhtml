@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Pagos - Cafefe</title>
+</h:head>
+
+<h:body>
+
+    <h1>Registrar pago</h1>
+
+    <h:form id="formPago">
+
+        <h2>Facturas pendientes</h2>
+
+        <h:dataTable value="#{pagoBean.facturasPendientes}"
+                     var="factura"
+                     border="1">
+
+            <h:column>
+                <f:facet name="header">
+                    Factura
+                </f:facet>
+
+                #{factura.idFactura}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    Cliente
+                </f:facet>
+
+                #{factura.cliente}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    Fecha
+                </f:facet>
+
+                #{factura.fechaFacturacion}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    Estado
+                </f:facet>
+
+                #{factura.estado}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">
+                    Acción
+                </f:facet>
+
+                <h:commandButton value="Seleccionar"
+                                 action="#{pagoBean.seleccionarFactura(factura)}">
+                    <f:ajax execute="@this" render="@form"/>
+                </h:commandButton>
+
+            </h:column>
+
+        </h:dataTable>
+
+        <br/>
+
+        <h:panelGroup rendered="#{pagoBean.facturaSeleccionada != null}">
+
+            <h2>Registrar pago</h2>
+
+            <p>
+                Factura seleccionada:
+                #{pagoBean.facturaSeleccionada.idFactura}
+            </p>
+
+            <p>
+                Cliente:
+                #{pagoBean.facturaSeleccionada.cliente}
+            </p>
+
+            <h:outputLabel value="Monto: "/>
+
+            <h:inputText value="#{pagoBean.monto}">
+                <f:convertNumber type="currency"
+                                 currencySymbol="$"/>
+            </h:inputText>
+
+            <br/><br/>
+
+            <h:outputLabel value="Tipo de pago: "/>
+
+            <h:selectOneMenu value="#{pagoBean.tipoPago}">
+
+                <f:selectItem itemLabel="Seleccione"
+                              itemValue=""/>
+
+                <f:selectItem itemLabel="Efectivo"
+                              itemValue="EFECTIVO"/>
+
+                <f:selectItem itemLabel="Tarjeta"
+                              itemValue="TARJETA"/>
+
+                <f:selectItem itemLabel="Transferencia"
+                              itemValue="TRANSFERENCIA"/>
+
+            </h:selectOneMenu>
+
+            <br/><br/>
+
+            <h:commandButton value="Registrar pago"
+                             action="#{pagoBean.registrarPago}"/>
+
+        </h:panelGroup>
+
+    </h:form>
+
+</h:body>
+
+</html>

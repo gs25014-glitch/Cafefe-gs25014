@@ -1,0 +1,32 @@
+services:
+
+  db:
+    image: postgres:18
+    container_name: cafefe-db
+
+    environment:
+      POSTGRES_DB: cafefe
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+
+    ports:
+      - "5433:5432"
+
+    volumes:
+      - cafefe-db-data:/var/lib/postgresql
+      - ./database/cafefe.sql:/docker-entrypoint-initdb.d/cafefe.sql
+
+
+  cafefe:
+    build: .
+    container_name: cafefe-app
+
+    ports:
+      - "127.0.0.1:9081:9080"
+
+    depends_on:
+      - db
+
+
+volumes:
+  cafefe-db-data:

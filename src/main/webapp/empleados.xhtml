@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Empleados - Cafefe</title>
+</h:head>
+
+<h:body>
+
+    <h1>Empleados - Cafefe</h1>
+
+    <h2>Crear empleado</h2>
+
+    <h:form>
+
+        <h:outputLabel value="Nombre:" />
+
+        <h:inputText
+            id="nombre"
+            value="#{empleadoBean.empleado.nombre}"
+            required="true"
+            requiredMessage="El nombre es obligatorio." />
+
+        <h:message for="nombre" />
+
+        <br /><br />
+
+        <h:outputLabel value="Apellido:" />
+
+        <h:inputText
+            id="apellido"
+            value="#{empleadoBean.empleado.apellido}"
+            required="true"
+            requiredMessage="El apellido es obligatorio." />
+
+        <h:message for="apellido" />
+
+        <br /><br />
+
+        <h:outputLabel value="Activo:" />
+
+        <h:selectBooleanCheckbox
+            value="#{empleadoBean.empleado.activo}" />
+
+        <br /><br />
+
+        <h:outputLabel value="Comentarios:" />
+
+        <h:inputTextarea
+            value="#{empleadoBean.empleado.comentarios}" />
+
+        <br /><br />
+
+        <h:commandButton
+            value="Guardar empleado"
+            action="#{empleadoBean.guardar}" />
+
+    </h:form>
+
+    <hr />
+
+    <h2>Lista de empleados</h2>
+
+    <h:form>
+
+        <h:dataTable
+            value="#{empleadoBean.empleados}"
+            var="empleado"
+            border="1">
+
+            <h:column>
+                <h:outputText value="ID" />
+                <br />
+                <h:outputText value="#{empleado.idEmpleado}" />
+            </h:column>
+
+            <h:column>
+                <h:outputText value="Nombre" />
+                <br />
+                <h:outputText value="#{empleado.nombre}" />
+            </h:column>
+
+            <h:column>
+                <h:outputText value="Apellido" />
+                <br />
+                <h:outputText value="#{empleado.apellido}" />
+            </h:column>
+
+            <h:column>
+                <h:outputText value="Activo" />
+                <br />
+                <h:outputText value="#{empleado.activo}" />
+            </h:column>
+
+            <h:column>
+                <h:outputText value="Comentarios" />
+                <br />
+                <h:outputText value="#{empleado.comentarios}" />
+            </h:column>
+
+            <h:column>
+                <h:commandButton
+                    value="Editar"
+                    action="#{empleadoBean.editar(empleado)}" />
+            </h:column>
+
+            <h:column>
+                <h:commandButton
+                    value="Eliminar"
+                    action="#{empleadoBean.eliminar(empleado)}" />
+            </h:column>
+
+        </h:dataTable>
+
+    </h:form>
+
+    <h:panelGroup
+        rendered="#{empleadoBean.empleadoSeleccionado != null}">
+
+        <hr />
+
+        <h2>Editar empleado</h2>
+
+        <h:form>
+
+            <h:outputLabel value="Nombre:" />
+
+            <h:inputText
+                id="nombreEditar"
+                value="#{empleadoBean.empleadoSeleccionado.nombre}"
+                required="true"
+                requiredMessage="El nombre es obligatorio." />
+
+            <h:message for="nombreEditar" />
+
+            <br /><br />
+
+            <h:outputLabel value="Apellido:" />
+
+            <h:inputText
+                id="apellidoEditar"
+                value="#{empleadoBean.empleadoSeleccionado.apellido}"
+                required="true"
+                requiredMessage="El apellido es obligatorio." />
+
+            <h:message for="apellidoEditar" />
+
+            <br /><br />
+
+            <h:outputLabel value="Activo:" />
+
+            <h:selectBooleanCheckbox
+                value="#{empleadoBean.empleadoSeleccionado.activo}" />
+
+            <br /><br />
+
+            <h:outputLabel value="Comentarios:" />
+
+            <h:inputTextarea
+                value="#{empleadoBean.empleadoSeleccionado.comentarios}" />
+
+            <br /><br />
+
+            <h:commandButton
+                value="Guardar cambios"
+                action="#{empleadoBean.actualizar}" />
+
+        </h:form>
+
+    </h:panelGroup>
+
+</h:body>
+
+</html>

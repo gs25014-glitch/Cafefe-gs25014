@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Productos - Cafefe</title>
+</h:head>
+
+<h:body>
+
+    <h1>Productos - Cafefe</h1>
+
+    <!-- FORMULARIO PARA CREAR PRODUCTO -->
+    <h2>Crear producto</h2>
+
+    <h:form>
+
+        <h:outputLabel value="Nombre:" />
+
+        <h:inputText
+            id="nombre"
+            value="#{productoBean.producto.nombre}"
+            required="true"
+            requiredMessage="El nombre del producto es obligatorio." />
+
+        <h:message for="nombre" />
+
+        <br /><br />
+
+
+        <h:outputLabel value="Precio sugerido:" />
+
+        <h:inputText
+            id="precio"
+            value="#{productoBean.producto.precioSugerido}"
+            required="true"
+            requiredMessage="El precio es obligatorio."
+            validatorMessage="El precio no puede ser negativo.">
+
+            <f:validateDoubleRange minimum="0" />
+
+        </h:inputText>
+
+        <h:message for="precio" />
+
+
+        <br /><br />
+
+        <h:outputLabel value="Activo:" />
+        <h:selectBooleanCheckbox
+            value="#{productoBean.producto.activo}" />
+        <br /><br />
+
+        <h:outputLabel value="Comentarios:" />
+        <h:inputTextarea
+            value="#{productoBean.producto.comentarios}" />
+        <br /><br />
+
+        <h:commandButton
+            value="Guardar producto"
+            action="#{productoBean.guardar}" />
+
+    </h:form>
+
+    <hr />
+    
+    <!-- LISTA DE PRODUCTOS -->
+    <h2>Lista de productos</h2>
+    <h:form>
+
+        <h:dataTable value="#{productoBean.productos}"
+                     var="producto"
+                     border="1">
+
+            <h:column>
+                <h:outputText value="ID" />
+                <br />
+                <h:outputText value="#{producto.idProducto}" />
+            </h:column>
+
+            <h:column>
+                <h:outputText value="Nombre" />
+                <br />
+                <h:outputText value="#{producto.nombre}" />
+            </h:column>
+
+            <h:column>
+                <h:outputText value="Precio" />
+                <br />
+                <h:outputText value="#{producto.precioSugerido}" />
+            </h:column>
+
+            <h:column>
+                <h:outputText value="Activo" />
+                <br />
+                <h:outputText value="#{producto.activo}" />
+            </h:column>
+
+            <h:column>
+                <h:outputText value="Comentarios" />
+                <br />
+                <h:outputText value="#{producto.comentarios}" />
+            </h:column>
+
+            <h:column>
+                <h:commandButton
+                    value="Editar"
+                    action="#{productoBean.editar(producto)}" />
+            </h:column>
+            
+            <h:column>
+                <h:commandButton
+                    value="Eliminar"
+                    action="#{productoBean.eliminar(producto)}" />
+            </h:column>
+
+        </h:dataTable>
+
+    </h:form>
+
+    <!-- FORMULARIO PARA EDITAR -->
+    <h:panelGroup rendered="#{productoBean.productoSeleccionado != null}">
+
+        <hr />
+
+        <h2>Editar producto</h2>
+
+        <h:form>
+
+            <h:outputLabel value="Nombre:" />
+
+            <h:inputText
+                id="nombreEditar"
+                value="#{productoBean.productoSeleccionado.nombre}"
+                required="true"
+                requiredMessage="El nombre del producto es obligatorio." />
+
+            <h:message for="nombreEditar" />
+            <br /><br />
+
+            <h:outputLabel value="Precio sugerido:" />
+
+            <h:inputText
+                id="precioEditar"
+                value="#{productoBean.productoSeleccionado.precioSugerido}"
+                required="true"
+                requiredMessage="El precio es obligatorio."
+                validatorMessage="El precio no puede ser negativo.">
+
+                <f:validateDoubleRange minimum="0" />
+
+            </h:inputText>
+
+            <h:message for="precioEditar" />
+            <br /><br />
+
+            <h:outputLabel value="Activo:" />
+            <h:selectBooleanCheckbox
+                value="#{productoBean.productoSeleccionado.activo}" />
+            <br /><br />
+
+            <h:outputLabel value="Comentarios:" />
+            <h:inputTextarea
+                value="#{productoBean.productoSeleccionado.comentarios}" />
+            <br /><br />
+
+            <h:commandButton
+                value="Guardar cambios"
+                action="#{productoBean.actualizar}" />
+
+        </h:form>
+
+    </h:panelGroup>
+
+</h:body>
+
+</html>

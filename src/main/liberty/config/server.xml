@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<server description="Servidor Cafefe">
+
+    <featureManager>
+        <feature>webProfile-11.0</feature>
+    </featureManager>
+
+    <httpEndpoint
+        id="defaultHttpEndpoint"
+        httpPort="9080"
+        httpsPort="9443" />
+
+    <library id="PostgresLib">
+        <fileset
+            dir="${server.config.dir}/lib"
+            includes="postgresql-42.7.13.jar" />
+    </library>
+
+    <dataSource jndiName="jdbc/CafefeDS">
+
+        <jdbcDriver libraryRef="PostgresLib" />
+
+        <properties.postgresql
+            databaseName="cafefe"
+            serverName="localhost"
+            portNumber="5432"
+            user="postgres"
+            password="1234" />
+
+    </dataSource>
+
+</server>

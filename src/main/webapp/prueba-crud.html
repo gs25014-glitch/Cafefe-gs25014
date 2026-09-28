@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit this template
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba CRUD Producto</title>
+</head>
+<body>
+
+    <h1>Prueba de actualizar producto</h1>
+
+    <label>ID del producto:</label>
+    <input type="text" id="id">
+    <br><br>
+    
+    <label>Nuevo nombre:</label>
+    <input type="text" id="nombre">
+    <br><br>
+
+    <label>Activo:</label>
+    <select id="activo">
+        <option value="true">Sí</option>
+        <option value="false">No</option>
+    </select>   
+    <br><br>
+
+    <label>Comentarios:</label>
+    <input type="text" id="comentarios">
+    <br><br>
+
+    <label>Precio sugerido:</label>
+    <input type="number" id="precio" step="0.01" min="0">
+    <br><br>
+
+    <button onclick="actualizarProducto()">
+        Actualizar producto
+    </button>
+
+    <hr>
+
+    <h1>Prueba de eliminar producto</h1>
+
+    <label>ID del producto:</label>
+    <input type="text" id="idEliminar">
+    <br><br>
+
+    <button onclick="eliminarProducto()">
+        Eliminar producto
+    </button>
+
+    <hr>
+
+    <div id="resultado"></div>
+    
+    <hr>
+
+    <h1>Actualizar tipo de producto</h1>
+
+    <label>ID:</label>
+    <input type="text" id="idTipo">
+
+    <br><br>
+
+    <label>Nombre:</label>
+    <input type="text" id="nombreTipo">
+
+    <br><br>
+
+    <label>Activo:</label>
+    <select id="activoTipo">
+        <option value="true">Sí</option>
+        <option value="false">No</option>
+    </select>
+
+    <br><br>
+
+    <label>Observaciones:</label>
+    <input type="text" id="observacionesTipo">
+
+    <br><br>
+
+    <button onclick="actualizarTipoProducto()">
+        Actualizar tipo de producto
+    </button>
+
+    <hr>
+
+    <h1>Eliminar tipo de producto</h1>
+
+    <label>ID:</label>
+    <input type="text" id="idTipoEliminar">
+
+    <br><br>
+
+    <button onclick="eliminarTipoProducto()">
+        Eliminar tipo de producto
+    </button>
+
+    <div id="resultadoTipo"></div>
+
+    <script>
+
+        async function actualizarProducto() {
+
+            const id = document.getElementById("id").value;
+            const nombre = document.getElementById("nombre").value;
+            const activo = document.getElementById("activo").value;
+            const comentarios = document.getElementById("comentarios").value;
+            const precio = document.getElementById("precio").value;
+
+            if (id.trim() === "") {
+                document.getElementById("resultado").innerHTML =
+                    "<h1>Error</h1><p>Debes ingresar el ID del producto.</p>";
+                return;
+            }
+
+            const url =
+                "productos/prueba"
+                + "?id=" + encodeURIComponent(id)
+                + "&nombre=" + encodeURIComponent(nombre)
+                + "&activo=" + encodeURIComponent(activo)
+                + "&comentarios=" + encodeURIComponent(comentarios)
+                + "&precio_sugerido=" + encodeURIComponent(precio);
+
+            const respuesta = await fetch(url, {
+                method: "PUT"
+            });
+
+            const resultado = await respuesta.text();
+
+            document.getElementById("resultado").innerHTML = resultado;
+        }
+
+
+        async function eliminarProducto() {
+
+            const id = document.getElementById("idEliminar").value;
+
+            if (id.trim() === "") {
+                document.getElementById("resultado").innerHTML =
+                    "<h1>Error</h1><p>Debes ingresar el ID del producto.</p>";
+                return;
+            }
+
+            const url =
+                "productos/prueba"
+                + "?id=" + encodeURIComponent(id);
+
+            const respuesta = await fetch(url, {
+                method: "DELETE"
+            });
+
+            const resultado = await respuesta.text();
+
+            document.getElementById("resultado").innerHTML = resultado;
+        }
+        
+        async function actualizarTipoProducto() {
+
+            const id = document.getElementById("idTipo").value;
+            const nombre = document.getElementById("nombreTipo").value;
+            const activo = document.getElementById("activoTipo").value;
+            const observaciones =
+                    document.getElementById("observacionesTipo").value;
+
+            if (id.trim() === "") {
+                document.getElementById("resultadoTipo").innerHTML =
+                        "<h1>Error</h1><p>Debes ingresar el ID.</p>";
+                return;
+            }
+
+            const url =
+                    "tipos-producto"
+                    + "?id=" + encodeURIComponent(id)
+                    + "&nombre=" + encodeURIComponent(nombre)
+                    + "&activo=" + encodeURIComponent(activo)
+                    + "&observaciones=" + encodeURIComponent(observaciones);
+
+            const respuesta = await fetch(url, {
+                method: "PUT"
+            });
+
+            const resultado = await respuesta.text();
+
+            document.getElementById("resultadoTipo").innerHTML =
+                    resultado;
+        }
+
+
+        async function eliminarTipoProducto() {
+
+            const id =
+                    document.getElementById("idTipoEliminar").value;
+
+            if (id.trim() === "") {
+                document.getElementById("resultadoTipo").innerHTML =
+                        "<h1>Error</h1><p>Debes ingresar el ID.</p>";
+                return;
+            }
+
+            const url =
+                    "tipos-producto"
+                    + "?id=" + encodeURIComponent(id);
+
+            const respuesta = await fetch(url, {
+                method: "DELETE"
+            });
+
+            const resultado = await respuesta.text();
+
+            document.getElementById("resultadoTipo").innerHTML =
+                    resultado;
+        }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Tipos de producto - Cafefe</title>
+</h:head>
+
+<h:body>
+
+    <h1>Tipos de producto - Cafefe</h1>
+
+    <h2>Crear tipo de producto</h2>
+
+    <h:form>
+
+        <h:outputLabel value="Nombre:" />
+
+        <h:inputText
+            id="nombre"
+            value="#{tipoProductoBean.tipoProducto.nombre}"
+            required="true"
+            requiredMessage="El nombre es obligatorio." />
+
+        <h:message for="nombre" />
+
+        <br /><br />
+
+        <h:outputLabel value="Activo:" />
+
+        <h:selectBooleanCheckbox
+            value="#{tipoProductoBean.tipoProducto.activo}" />
+
+        <br /><br />
+
+        <h:outputLabel value="Observaciones:" />
+
+        <h:inputTextarea
+            value="#{tipoProductoBean.tipoProducto.observaciones}" />
+
+        <br /><br />
+
+        <h:commandButton
+            value="Guardar tipo de producto"
+            action="#{tipoProductoBean.guardar}" />
+
+    </h:form>
+
+    <hr />
+
+    <h2>Lista de tipos de producto</h2>
+
+    <h:form>
+
+        <h:dataTable
+            value="#{tipoProductoBean.tiposProducto}"
+            var="tipoProducto"
+            border="1">
+
+            <h:column>
+                <h:outputText value="ID" />
+                <br />
+                <h:outputText
+                    value="#{tipoProducto.idTipoProducto}" />
+            </h:column>
+
+            <h:column>
+                <h:outputText value="Nombre" />
+                <br />
+                <h:outputText
+                    value="#{tipoProducto.nombre}" />
+            </h:column>
+
+            <h:column>
+                <h:outputText value="Activo" />
+                <br />
+                <h:outputText
+                    value="#{tipoProducto.activo}" />
+            </h:column>
+
+            <h:column>
+                <h:outputText value="Observaciones" />
+                <br />
+                <h:outputText
+                    value="#{tipoProducto.observaciones}" />
+            </h:column>
+
+            <h:column>
+                <h:commandButton
+                    value="Editar"
+                    action="#{tipoProductoBean.editar(tipoProducto)}" />
+            </h:column>
+
+            <h:column>
+                <h:commandButton
+                    value="Eliminar"
+                    action="#{tipoProductoBean.eliminar(tipoProducto)}" />
+            </h:column>
+
+        </h:dataTable>
+
+    </h:form>
+
+    <h:panelGroup
+        rendered="#{tipoProductoBean.tipoProductoSeleccionado != null}">
+
+        <hr />
+
+        <h2>Editar tipo de producto</h2>
+
+        <h:form>
+
+            <h:outputLabel value="Nombre:" />
+
+            <h:inputText
+                id="nombreEditar"
+                value="#{tipoProductoBean.tipoProductoSeleccionado.nombre}"
+                required="true"
+                requiredMessage="El nombre es obligatorio." />
+
+            <h:message for="nombreEditar" />
+
+            <br /><br />
+
+            <h:outputLabel value="Activo:" />
+
+            <h:selectBooleanCheckbox
+                value="#{tipoProductoBean.tipoProductoSeleccionado.activo}" />
+
+            <br /><br />
+
+            <h:outputLabel value="Observaciones:" />
+
+            <h:inputTextarea
+                value="#{tipoProductoBean.tipoProductoSeleccionado.observaciones}" />
+
+            <br /><br />
+
+            <h:commandButton
+                value="Guardar cambios"
+                action="#{tipoProductoBean.actualizar}" />
+
+        </h:form>
+
+    </h:panelGroup>
+
+</h:body>
+
+</html>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Ordenes - Cafefe</title>
+</h:head>
+
+<h:body>
+
+    <h1>Crear Orden</h1>
+    
+    <h:form>
+
+        <h3>Empleado</h3>
+
+        <h:selectOneMenu value="#{ordenBean.empleadoSeleccionado}">
+            <f:selectItem
+                itemLabel="Seleccione un empleado"
+                noSelectionOption="true" />
+
+            <f:selectItems
+                value="#{ordenBean.empleados}"
+                var="empleado"
+                itemValue="#{empleado.idEmpleado}"
+                itemLabel="#{empleado.nombre} #{empleado.apellido}" />
+        </h:selectOneMenu>
+        
+        <h3>Caja</h3>
+
+        <h:selectOneMenu value="#{ordenBean.cajaSeleccionada}">
+
+            <f:selectItem
+                itemLabel="Seleccione una caja"
+                noSelectionOption="true" />
+
+            <f:selectItems
+                value="#{ordenBean.cajas}"
+                var="caja"
+                itemValue="#{caja.idCaja}"
+                itemLabel="#{caja.nombre}" />
+
+        </h:selectOneMenu>
+
+        <br/>
+        <br/>
+
+        <br/>
+        <br/>
+
+        <h3>Agregar producto</h3>
+
+        <h:selectOneMenu value="#{ordenBean.productoSeleccionado}">
+
+            <f:selectItem
+                itemLabel="Seleccione un producto"
+                noSelectionOption="true" />
+
+            <f:selectItems
+                value="#{ordenBean.productos}"
+                var="producto"
+                itemValue="#{producto.idProducto}"
+                itemLabel="#{producto.nombre} - $#{producto.precioSugerido}" />
+
+        </h:selectOneMenu>
+
+        <h:commandButton
+            value="Agregar producto"
+            action="#{ordenBean.agregarProducto}" />
+
+        <br/>
+        <br/>
+
+        <h3>Productos de la orden</h3>
+
+        <h:dataTable
+            value="#{ordenBean.productosOrden}"
+            var="detalle"
+            border="1">
+
+            <h:column>
+                <f:facet name="header">Producto</f:facet>
+
+                <h:outputText value="#{detalle.idProducto}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Precio</f:facet>
+
+                <h:outputText value="#{detalle.precio}" />
+            </h:column>
+
+        </h:dataTable>
+
+        <br/>
+
+        <h3>
+            Total:
+            $<h:outputText value="#{ordenBean.total}" />
+        </h3>
+
+        <h:commandButton
+            value="Guardar orden"
+            action="#{ordenBean.guardarOrden}" />
+
+    </h:form>
+
+</h:body>
+
+</html> 
