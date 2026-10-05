@@ -11,12 +11,18 @@
 
     <h1>Productos - Cafefe</h1>
 
-    <!-- FORMULARIO PARA CREAR PRODUCTO -->
+    <!-- ============================= -->
+    <!-- CREAR PRODUCTO -->
+    <!-- ============================= -->
+
     <h2>Crear producto</h2>
 
-    <h:form>
+    <h:form id="formProducto">
 
-        <h:outputLabel value="Nombre:" />
+        <!-- Nombre -->
+        <h:outputLabel
+            for="nombre"
+            value="Nombre:" />
 
         <h:inputText
             id="nombre"
@@ -29,7 +35,10 @@
         <br /><br />
 
 
-        <h:outputLabel value="Precio sugerido:" />
+        <!-- Precio sugerido -->
+        <h:outputLabel
+            for="precio"
+            value="Precio sugerido:" />
 
         <h:inputText
             id="precio"
@@ -44,102 +53,278 @@
 
         <h:message for="precio" />
 
-
         <br /><br />
 
-        <h:outputLabel value="Activo:" />
+
+        <!-- Activo -->
+        <h:outputLabel
+            for="activo"
+            value="Activo:" />
+
         <h:selectBooleanCheckbox
+            id="activo"
             value="#{productoBean.producto.activo}" />
+
         <br /><br />
 
-        <h:outputLabel value="Comentarios:" />
-        <h:inputTextarea
-            value="#{productoBean.producto.comentarios}" />
+
+        <!-- Tipo de producto -->
+        <h:outputLabel
+            for="tipoProducto"
+            value="Tipo de producto:" />
+
+        <h:selectOneMenu
+            id="tipoProducto"
+            value="#{productoBean.idTipoProductoSeleccionado}"
+            required="true"
+            requiredMessage="Debe seleccionar un tipo de producto.">
+
+            <f:selectItem
+                itemLabel="Seleccione un tipo de producto"
+                itemValue="#{null}"
+                noSelectionOption="true" />
+
+            <f:selectItems
+                value="#{productoBean.tiposProductoActivos}"
+                var="tipo"
+                itemValue="#{tipo.idTipoProducto}"
+                itemLabel="#{tipo.nombre}" />
+
+        </h:selectOneMenu>
+
+        <h:message for="tipoProducto" />
+
         <br /><br />
 
+
+        <!-- ============================= -->
+        <!-- CARACTERÍSTICA -->
+        <!-- ============================= -->
+
+        <h:outputLabel
+            for="caracteristica"
+            value="Característica:" />
+
+        <h:selectOneMenu
+            id="caracteristica"
+            value="#{productoBean.idCaracteristicaSeleccionada}">
+
+            <f:selectItem
+                itemLabel="Seleccione una característica"
+                itemValue="#{null}"
+                noSelectionOption="true" />
+
+            <f:selectItems
+                value="#{productoBean.caracteristicasActivas}"
+                var="caracteristica"
+                itemValue="#{caracteristica.idCaracteristica}"
+                itemLabel="#{caracteristica.nombre}" />
+
+        </h:selectOneMenu>
+
+        <br /><br />
+
+
+        <!-- Valor de característica -->
+        <h:outputLabel
+            for="valorCaracteristica"
+            value="Valor de característica:" />
+
+        <h:inputText
+            id="valorCaracteristica"
+            value="#{productoBean.valorCaracteristica}" />
+
+        <br /><br />
+
+
+        <!-- Mensajes -->
+        <h:messages
+            globalOnly="true"
+            style="color:red;" />
+
+        <br />
+
+
+        <!-- Botón guardar -->
         <h:commandButton
             value="Guardar producto"
             action="#{productoBean.guardar}" />
 
+        <br /><br />
+
+        <!-- Botón nuevo -->
+        <h:commandButton
+            value="Limpiar"
+            action="#{productoBean.nuevoProducto}"
+            immediate="true" />
+
     </h:form>
 
+
     <hr />
-    
+
+
+    <!-- ============================= -->
     <!-- LISTA DE PRODUCTOS -->
+    <!-- ============================= -->
+
     <h2>Lista de productos</h2>
-    <h:form>
 
-        <h:dataTable value="#{productoBean.productos}"
-                     var="producto"
-                     border="1">
+    <h:form id="formLista">
 
+        <h:dataTable
+            value="#{productoBean.productos}"
+            var="producto"
+            border="1">
+
+            <!-- ID -->
             <h:column>
+
                 <h:outputText value="ID" />
+
                 <br />
-                <h:outputText value="#{producto.idProducto}" />
+
+                <h:outputText
+                    value="#{producto.idProducto}" />
+
             </h:column>
 
+
+            <!-- Nombre -->
             <h:column>
+
                 <h:outputText value="Nombre" />
+
                 <br />
-                <h:outputText value="#{producto.nombre}" />
+
+                <h:outputText
+                    value="#{producto.nombre}" />
+
             </h:column>
 
+
+            <!-- Precio -->
             <h:column>
+
                 <h:outputText value="Precio" />
+
                 <br />
-                <h:outputText value="#{producto.precioSugerido}" />
+
+                <h:outputText
+                    value="#{producto.precioSugerido}" />
+
             </h:column>
 
+
+            <!-- Tipo de producto -->
             <h:column>
+
+                <h:outputText value="Tipo de producto" />
+
+                <br />
+
+                <h:outputText
+                    value="#{productoBean.tipoDeProducto(producto)}" />
+
+            </h:column>
+
+
+            <!-- Características -->
+            <h:column>
+
+                <h:outputText value="Características" />
+
+                <br />
+
+                <h:outputText
+                    value="#{productoBean.caracteristicasDeProducto(producto)}" />
+
+            </h:column>
+
+
+            <!-- Activo -->
+            <h:column>
+
                 <h:outputText value="Activo" />
+
                 <br />
-                <h:outputText value="#{producto.activo}" />
+
+                <h:outputText
+                    value="#{producto.activo}" />
+
             </h:column>
 
+
+            <!-- Comentarios -->
             <h:column>
+
                 <h:outputText value="Comentarios" />
+
                 <br />
-                <h:outputText value="#{producto.comentarios}" />
+
+                <h:outputText
+                    value="#{producto.comentarios}" />
+
             </h:column>
 
+
+            <!-- Editar -->
             <h:column>
+
                 <h:commandButton
                     value="Editar"
                     action="#{productoBean.editar(producto)}" />
+
             </h:column>
-            
+
+
+            <!-- Eliminar -->
             <h:column>
+
                 <h:commandButton
                     value="Eliminar"
                     action="#{productoBean.eliminar(producto)}" />
+
             </h:column>
 
         </h:dataTable>
 
     </h:form>
 
-    <!-- FORMULARIO PARA EDITAR -->
-    <h:panelGroup rendered="#{productoBean.productoSeleccionado != null}">
+
+    <!-- ============================= -->
+    <!-- EDITAR PRODUCTO -->
+    <!-- ============================= -->
+
+    <h:panelGroup
+        rendered="#{productoBean.productoSeleccionado != null}">
 
         <hr />
 
         <h2>Editar producto</h2>
 
-        <h:form>
+        <h:form id="formEditar">
 
-            <h:outputLabel value="Nombre:" />
+            <!-- Nombre -->
+            <h:outputLabel
+                for="nombreEditar"
+                value="Nombre:" />
 
             <h:inputText
                 id="nombreEditar"
                 value="#{productoBean.productoSeleccionado.nombre}"
                 required="true"
-                requiredMessage="El nombre del producto es obligatorio." />
+                requiredMessage="El nombre es obligatorio." />
 
             <h:message for="nombreEditar" />
+
             <br /><br />
 
-            <h:outputLabel value="Precio sugerido:" />
+
+            <!-- Precio -->
+            <h:outputLabel
+                for="precioEditar"
+                value="Precio sugerido:" />
 
             <h:inputText
                 id="precioEditar"
@@ -153,20 +338,37 @@
             </h:inputText>
 
             <h:message for="precioEditar" />
+
             <br /><br />
 
-            <h:outputLabel value="Activo:" />
+
+            <!-- Activo -->
+            <h:outputLabel
+                for="activoEditar"
+                value="Activo:" />
+
             <h:selectBooleanCheckbox
+                id="activoEditar"
                 value="#{productoBean.productoSeleccionado.activo}" />
+
             <br /><br />
 
-            <h:outputLabel value="Comentarios:" />
+
+            <!-- Comentarios -->
+            <h:outputLabel
+                for="comentariosEditar"
+                value="Comentarios:" />
+
             <h:inputTextarea
+                id="comentariosEditar"
                 value="#{productoBean.productoSeleccionado.comentarios}" />
+
             <br /><br />
 
+
+            <!-- Actualizar -->
             <h:commandButton
-                value="Guardar cambios"
+                value="Actualizar"
                 action="#{productoBean.actualizar}" />
 
         </h:form>

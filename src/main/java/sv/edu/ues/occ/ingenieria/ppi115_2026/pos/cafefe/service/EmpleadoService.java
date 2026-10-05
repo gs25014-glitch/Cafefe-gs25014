@@ -15,12 +15,16 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.Empleado;
+import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.EmpleadoRol;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.repository.EmpleadoRepository;
 
 @ApplicationScoped
 public class EmpleadoService {
 
     private EmpleadoRepository empleadoRepository;
+
+    @Inject
+    private EmpleadoRolService empleadoRolService;
 
     protected EmpleadoService() {
     }
@@ -33,6 +37,21 @@ public class EmpleadoService {
     @Transactional
     public void guardar(Empleado empleado) {
         empleadoRepository.guardar(empleado);
+    }
+
+    @Transactional
+    public void guardarConRol(Empleado empleado, UUID idRol) {
+
+        empleadoRepository.guardar(empleado);
+
+        EmpleadoRol empleadoRol = new EmpleadoRol();
+
+        empleadoRol.setIdEmpleadoRol(UUID.randomUUID());
+        empleadoRol.setIdEmpleado(empleado.getIdEmpleado());
+        empleadoRol.setIdRol(idRol);
+        empleadoRol.setActivo(true);
+
+        empleadoRolService.guardar(empleadoRol);
     }
 
     public List<Empleado> listar() {

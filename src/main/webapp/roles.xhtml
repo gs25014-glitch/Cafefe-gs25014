@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Roles - Cafefe</title>
+</h:head>
+
+<h:body>
+
+    <h1>Roles</h1>
+
+    <h:form id="formRol">
+
+        <h:panelGrid columns="2">
+
+            <h:outputLabel for="nombre" value="Nombre:" />
+
+            <h:inputText
+                id="nombre"
+                value="#{rolBean.rol.nombre}"
+                required="true"
+                requiredMessage="El nombre es obligatorio."
+            />
+
+            <h:outputLabel for="activo" value="Activo:" />
+
+            <h:selectBooleanCheckbox
+                id="activo"
+                value="#{rolBean.rol.activo}"
+            />
+
+            <h:outputLabel for="observaciones" value="Observaciones:" />
+
+            <h:inputTextarea
+                id="observaciones"
+                value="#{rolBean.rol.observaciones}"
+            />
+
+        </h:panelGrid>
+
+        <br/>
+
+        <h:commandButton
+            value="#{rolBean.editando ? 'Actualizar' : 'Guardar'}"
+            action="#{rolBean.guardar}"
+        />
+
+        <h:commandButton
+            value="Nuevo"
+            action="#{rolBean.nuevo}"
+            immediate="true"
+        />
+
+        <h:commandButton
+            value="Cancelar"
+            action="#{rolBean.cancelar}"
+            immediate="true"
+            rendered="#{rolBean.editando}"
+        />
+
+        <h:messages />
+
+        <br/>
+        <br/>
+
+        <h:dataTable
+            value="#{rolBean.roles}"
+            var="item"
+            border="1"
+            rendered="#{not empty rolBean.roles}"
+        >
+
+            <h:column>
+                <f:facet name="header">Nombre</f:facet>
+                #{item.nombre}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Activo</f:facet>
+                #{item.activo ? 'Sí' : 'No'}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Observaciones</f:facet>
+                #{item.observaciones}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Acciones</f:facet>
+
+                <h:commandButton
+                    value="Editar"
+                    action="#{rolBean.editar(item)}"
+                />
+
+                <h:commandButton
+                    value="Eliminar"
+                    action="#{rolBean.eliminar(item.idRol)}"
+                />
+
+            </h:column>
+
+        </h:dataTable>
+
+    </h:form>
+
+    <br/>
+
+    <h:link
+        outcome="index"
+        value="Volver al menú"
+    />
+
+</h:body>
+
+</html>

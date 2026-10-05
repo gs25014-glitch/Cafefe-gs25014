@@ -15,12 +15,22 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.Producto;
+import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.ProductoCaracteristica;
+import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.ProductoTipoProducto;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.repository.ProductoRepository;
+import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.repository.ProductoCaracteristicaRepository;
+import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.repository.ProductoTipoProductoRepository;
 
 @ApplicationScoped
 public class ProductoService {
 
     private ProductoRepository productoRepository;
+
+    @Inject
+    private ProductoTipoProductoRepository productoTipoProductoRepository;
+
+    @Inject
+    private ProductoCaracteristicaRepository productoCaracteristicaRepository;
 
     protected ProductoService() {
     }
@@ -28,6 +38,45 @@ public class ProductoService {
     @Inject
     public ProductoService(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
+    }
+
+    @Transactional
+    public void guardarProductoCompleto(
+            Producto producto,
+            UUID idTipoProducto,
+            List<ProductoCaracteristica> caracteristicas) {
+
+        // Guardar producto
+        productoRepository.guardar(producto);
+
+        // Guardar tipo de producto
+        ProductoTipoProducto relacionTipo =
+                new ProductoTipoProducto();
+
+        relacionTipo.setIdProductoTipoProducto(UUID.randomUUID());
+        relacionTipo.setIdProducto(producto.getIdProducto());
+        relacionTipo.setIdTipoProducto(idTipoProducto);
+
+        productoTipoProductoRepository.guardar(relacionTipo);
+
+        // Guardar características
+        if (caracteristicas != null) {
+
+            for (ProductoCaracteristica caracteristica : caracteristicas) {
+
+                caracteristica.setIdProductoCaracteristica(
+                        UUID.randomUUID()
+                );
+
+                caracteristica.setIdProducto(
+                        producto.getIdProducto()
+                );
+
+                productoCaracteristicaRepository.guardar(
+                        caracteristica
+                );
+            }
+        }
     }
 
     @Transactional

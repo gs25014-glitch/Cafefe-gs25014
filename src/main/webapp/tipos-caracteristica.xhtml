@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Tipos de Características - Cafefe</title>
+</h:head>
+
+<h:body>
+
+    <h1>Tipos de Características - Cafefe</h1>
+
+    <h2>
+        Crear tipo de característica
+    </h2>
+
+    <h:form>
+
+        <h:outputLabel
+            for="nombre"
+            value="Nombre:" />
+
+        <h:inputText
+            id="nombre"
+            value="#{tipoCaracteristicaBean.tipoCaracteristica.nombre}"
+            required="true"
+            requiredMessage="El nombre es obligatorio." />
+
+        <h:message for="nombre" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="expresionRegular"
+            value="Expresión regular:" />
+
+        <h:inputTextarea
+            id="expresionRegular"
+            value="#{tipoCaracteristicaBean.tipoCaracteristica.expresionRegular}"
+            required="true"
+            requiredMessage="La expresión regular es obligatoria." />
+
+        <h:message for="expresionRegular" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="activo"
+            value="Activo:" />
+
+        <h:selectBooleanCheckbox
+            id="activo"
+            value="#{tipoCaracteristicaBean.tipoCaracteristica.activo}" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="observaciones"
+            value="Observaciones:" />
+
+        <h:inputTextarea
+            id="observaciones"
+            value="#{tipoCaracteristicaBean.tipoCaracteristica.observaciones}" />
+
+        <br /><br />
+
+        <h:commandButton
+            value="#{tipoCaracteristicaBean.editando ? 'Guardar cambios' : 'Guardar'}"
+            action="#{tipoCaracteristicaBean.guardar}" />
+
+        <h:commandButton
+            value="Cancelar"
+            action="#{tipoCaracteristicaBean.cancelar}"
+            immediate="true" />
+
+    </h:form>
+
+    <hr />
+
+    <h2>
+        Lista de tipos de características
+    </h2>
+
+    <h:form>
+
+        <h:dataTable
+            value="#{tipoCaracteristicaBean.tiposCaracteristica}"
+            var="tipo"
+            border="1">
+
+            <h:column>
+
+                <f:facet name="header">
+                    ID
+                </f:facet>
+
+                <h:outputText
+                    value="#{tipo.idTipoCaracteristica}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Nombre
+                </f:facet>
+
+                <h:outputText
+                    value="#{tipo.nombre}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Expresión regular
+                </f:facet>
+
+                <h:outputText
+                    value="#{tipo.expresionRegular}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Activo
+                </f:facet>
+
+                <h:outputText
+                    value="#{tipo.activo ? 'Sí' : 'No'}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Observaciones
+                </f:facet>
+
+                <h:outputText
+                    value="#{tipo.observaciones}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Acciones
+                </f:facet>
+
+                <h:commandButton
+                    value="Editar"
+                    action="#{tipoCaracteristicaBean.editar(tipo)}" />
+
+                <h:commandButton
+                    value="Eliminar"
+                    action="#{tipoCaracteristicaBean.eliminar(tipo.idTipoCaracteristica)}" />
+
+            </h:column>
+
+        </h:dataTable>
+
+    </h:form>
+
+</h:body>
+
+</html>

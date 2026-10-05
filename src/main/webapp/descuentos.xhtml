@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Descuentos - Cafefe</title>
+</h:head>
+
+<h:body>
+
+    <h1>Descuentos - Cafefe</h1>
+
+    <h2>Crear descuento</h2>
+
+    <h:form>
+
+        <h:outputLabel
+            for="nombre"
+            value="Nombre:" />
+
+        <h:inputText
+            id="nombre"
+            value="#{descuentoBean.descuento.nombre}"
+            required="true"
+            requiredMessage="El nombre es obligatorio." />
+
+        <h:message for="nombre" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="tipo"
+            value="Tipo de descuento:" />
+
+        <h:selectOneMenu
+            id="tipo"
+            value="#{descuentoBean.idTipoSeleccionado}"
+            required="true"
+            requiredMessage="Debe seleccionar un tipo.">
+
+            <f:selectItem
+                itemLabel="Seleccione un tipo"
+                itemValue="#{null}"
+                noSelectionOption="true" />
+
+            <f:selectItems
+                value="#{descuentoBean.opcionesTipos}" />
+
+        </h:selectOneMenu>
+
+        <h:message for="tipo" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="fechaDesde"
+            value="Fecha desde:" />
+
+        <h:inputText
+            id="fechaDesde"
+            value="#{descuentoBean.fechaDesdeTexto}"
+            required="true"
+            requiredMessage="La fecha desde es obligatoria.">
+
+            <f:passThroughAttribute
+                name="type"
+                value="datetime-local" />
+
+        </h:inputText>
+
+        <h:message for="fechaDesde" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="fechaHasta"
+            value="Fecha hasta:" />
+
+        <h:inputText
+            id="fechaHasta"
+            value="#{descuentoBean.fechaHastaTexto}">
+
+            <f:passThroughAttribute
+                name="type"
+                value="datetime-local" />
+
+        </h:inputText>
+
+        <h:message for="fechaHasta" />
+
+        <br />
+
+        <h:outputText
+            value="Déjala vacía para que no tenga fecha de finalización." />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="observaciones"
+            value="Observaciones:" />
+
+        <h:inputTextarea
+            id="observaciones"
+            value="#{descuentoBean.descuento.observaciones}" />
+
+        <br /><br />
+
+        <h:commandButton
+            value="#{descuentoBean.editando ? 'Guardar cambios' : 'Guardar'}"
+            action="#{descuentoBean.guardar}" />
+
+        <h:commandButton
+            value="Cancelar"
+            action="#{descuentoBean.cancelar}"
+            immediate="true" />
+
+        <h:messages />
+
+    </h:form>
+
+    <hr />
+
+    <h2>Lista de descuentos</h2>
+
+    <h:form>
+
+        <h:dataTable
+            value="#{descuentoBean.descuentos}"
+            var="d"
+            border="1">
+
+            <h:column>
+
+                <f:facet name="header">
+                    ID
+                </f:facet>
+
+                <h:outputText value="#{d.idDescuento}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Nombre
+                </f:facet>
+
+                <h:outputText value="#{d.nombre}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Tipo
+                </f:facet>
+
+                <h:outputText value="#{d.idTipoDescuento}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Fecha desde
+                </f:facet>
+
+                <h:outputText value="#{d.fechaDesde}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Fecha hasta
+                </f:facet>
+
+                <h:outputText
+                    value="#{empty d.fechaHasta ? 'Sin fecha de finalización' : d.fechaHasta}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Observaciones
+                </f:facet>
+
+                <h:outputText value="#{d.observaciones}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Acciones
+                </f:facet>
+
+                <h:commandButton
+                    value="Editar"
+                    action="#{descuentoBean.editar(d)}" />
+
+                <h:commandButton
+                    value="Eliminar"
+                    action="#{descuentoBean.eliminar(d.idDescuento)}" />
+
+            </h:column>
+
+        </h:dataTable>
+
+    </h:form>
+
+</h:body>
+
+</html>

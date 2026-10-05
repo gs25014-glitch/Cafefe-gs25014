@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Tipos de Descuento - Cafefe</title>
+</h:head>
+
+<h:body>
+
+    <h1>Tipos de Descuento - Cafefe</h1>
+
+    <h2>Crear tipo de descuento</h2>
+
+    <h:form>
+
+        <h:outputLabel
+            for="nombre"
+            value="Nombre:" />
+
+        <h:inputText
+            id="nombre"
+            value="#{tipoDescuentoBean.tipoDescuento.nombre}"
+            required="true"
+            requiredMessage="El nombre es obligatorio." />
+
+        <h:message for="nombre" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="descuentoMaximo"
+            value="Descuento máximo (%):" />
+
+        <h:inputText
+            id="descuentoMaximo"
+            value="#{tipoDescuentoBean.tipoDescuento.descuentoMaximo}"
+            required="true"
+            requiredMessage="El descuento máximo es obligatorio.">
+
+            <f:validateLongRange
+                minimum="0"
+                maximum="100" />
+
+        </h:inputText>
+
+        <h:message for="descuentoMaximo" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="activo"
+            value="Activo:" />
+
+        <h:selectBooleanCheckbox
+            id="activo"
+            value="#{tipoDescuentoBean.tipoDescuento.activo}" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="observaciones"
+            value="Observaciones:" />
+
+        <h:inputTextarea
+            id="observaciones"
+            value="#{tipoDescuentoBean.tipoDescuento.observaciones}" />
+
+        <br /><br />
+
+        <h:commandButton
+            value="#{tipoDescuentoBean.editando ? 'Guardar cambios' : 'Guardar'}"
+            action="#{tipoDescuentoBean.guardar}" />
+
+        <h:commandButton
+            value="Cancelar"
+            action="#{tipoDescuentoBean.cancelar}"
+            immediate="true" />
+
+    </h:form>
+
+    <hr />
+
+    <h2>Lista de tipos de descuento</h2>
+
+    <h:form>
+
+        <h:dataTable
+            value="#{tipoDescuentoBean.tiposDescuento}"
+            var="tipo"
+            border="1">
+
+            <h:column>
+
+                <f:facet name="header">
+                    ID
+                </f:facet>
+
+                <h:outputText
+                    value="#{tipo.idTipoDescuento}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Nombre
+                </f:facet>
+
+                <h:outputText
+                    value="#{tipo.nombre}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Descuento máximo
+                </f:facet>
+
+                <h:outputText
+                    value="#{tipo.descuentoMaximo}%"
+                />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Activo
+                </f:facet>
+
+                <h:outputText
+                    value="#{tipo.activo ? 'Sí' : 'No'}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Observaciones
+                </f:facet>
+
+                <h:outputText
+                    value="#{tipo.observaciones}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Acciones
+                </f:facet>
+
+                <h:commandButton
+                    value="Editar"
+                    action="#{tipoDescuentoBean.editar(tipo)}" />
+
+                <h:commandButton
+                    value="Eliminar"
+                    action="#{tipoDescuentoBean.eliminar(tipo.idTipoDescuento)}" />
+
+            </h:column>
+
+        </h:dataTable>
+
+    </h:form>
+
+</h:body>
+
+</html>

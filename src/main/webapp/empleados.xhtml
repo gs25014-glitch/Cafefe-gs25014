@@ -20,7 +20,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
     <h:form>
 
-        <h:outputLabel value="Nombre:" />
+        <h:outputLabel
+            for="nombre"
+            value="Nombre:" />
 
         <h:inputText
             id="nombre"
@@ -32,7 +34,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
         <br /><br />
 
-        <h:outputLabel value="Apellido:" />
+        <h:outputLabel
+            for="apellido"
+            value="Apellido:" />
 
         <h:inputText
             id="apellido"
@@ -44,16 +48,45 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
         <br /><br />
 
-        <h:outputLabel value="Activo:" />
+        <h:outputLabel
+            for="activo"
+            value="Activo:" />
 
         <h:selectBooleanCheckbox
+            id="activo"
             value="#{empleadoBean.empleado.activo}" />
 
         <br /><br />
 
-        <h:outputLabel value="Comentarios:" />
+        <h:outputLabel for="rol" value="Rol:" />
+        
+
+
+        <h:selectOneMenu id="rol"
+                         value="#{empleadoBean.idRolSeleccionado}"
+                         required="true"
+                         requiredMessage="Debe seleccionar un rol">
+
+            <f:selectItem
+                itemLabel="Seleccione un rol"
+                itemValue="#{null}"
+                noSelectionOption="true" />
+
+            <f:selectItems
+                value="#{empleadoBean.opcionesRoles}" />
+
+        </h:selectOneMenu>
+
+        <h:message for="rol" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="comentarios"
+            value="Comentarios:" />
 
         <h:inputTextarea
+            id="comentarios"
             value="#{empleadoBean.empleado.comentarios}" />
 
         <br /><br />
@@ -76,45 +109,85 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             border="1">
 
             <h:column>
-                <h:outputText value="ID" />
-                <br />
-                <h:outputText value="#{empleado.idEmpleado}" />
+
+                <f:facet name="header">
+                    ID
+                </f:facet>
+
+                <h:outputText
+                    value="#{empleado.idEmpleado}" />
+
             </h:column>
 
             <h:column>
-                <h:outputText value="Nombre" />
-                <br />
-                <h:outputText value="#{empleado.nombre}" />
+
+                <f:facet name="header">
+                    Nombre
+                </f:facet>
+
+                <h:outputText
+                    value="#{empleado.nombre}" />
+
             </h:column>
 
             <h:column>
-                <h:outputText value="Apellido" />
-                <br />
-                <h:outputText value="#{empleado.apellido}" />
+
+                <f:facet name="header">
+                    Apellido
+                </f:facet>
+
+                <h:outputText
+                    value="#{empleado.apellido}" />
+
             </h:column>
 
             <h:column>
-                <h:outputText value="Activo" />
-                <br />
-                <h:outputText value="#{empleado.activo}" />
+
+                <f:facet name="header">
+                    Rol
+                </f:facet>
+
+                <h:outputText
+                    value="#{empleadoBean.obtenerNombreRol(empleado.idEmpleado)}" />
+
             </h:column>
 
             <h:column>
-                <h:outputText value="Comentarios" />
-                <br />
-                <h:outputText value="#{empleado.comentarios}" />
+
+                <f:facet name="header">
+                    Activo
+                </f:facet>
+
+                <h:outputText
+                    value="#{empleado.activo ? 'Sí' : 'No'}" />
+
             </h:column>
 
             <h:column>
+
+                <f:facet name="header">
+                    Comentarios
+                </f:facet>
+
+                <h:outputText
+                    value="#{empleado.comentarios}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Acciones
+                </f:facet>
+
                 <h:commandButton
                     value="Editar"
                     action="#{empleadoBean.editar(empleado)}" />
-            </h:column>
 
-            <h:column>
                 <h:commandButton
                     value="Eliminar"
                     action="#{empleadoBean.eliminar(empleado)}" />
+
             </h:column>
 
         </h:dataTable>
@@ -130,7 +203,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
         <h:form>
 
-            <h:outputLabel value="Nombre:" />
+            <h:outputLabel
+                for="nombreEditar"
+                value="Nombre:" />
 
             <h:inputText
                 id="nombreEditar"
@@ -142,7 +217,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
             <br /><br />
 
-            <h:outputLabel value="Apellido:" />
+            <h:outputLabel
+                for="apellidoEditar"
+                value="Apellido:" />
 
             <h:inputText
                 id="apellidoEditar"
@@ -154,16 +231,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
             <br /><br />
 
-            <h:outputLabel value="Activo:" />
+            <h:outputLabel
+                for="activoEditar"
+                value="Activo:" />
 
             <h:selectBooleanCheckbox
+                id="activoEditar"
                 value="#{empleadoBean.empleadoSeleccionado.activo}" />
 
             <br /><br />
 
-            <h:outputLabel value="Comentarios:" />
+            <h:outputLabel
+                for="comentariosEditar"
+                value="Comentarios:" />
 
             <h:inputTextarea
+                id="comentariosEditar"
                 value="#{empleadoBean.empleadoSeleccionado.comentarios}" />
 
             <br /><br />

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Características - Cafefe</title>
+</h:head>
+
+<h:body>
+
+    <h1>Características - Cafefe</h1>
+
+    <h2>Crear característica</h2>
+
+    <h:form>
+
+        <h:outputLabel
+            for="nombre"
+            value="Nombre:" />
+
+        <h:inputText
+            id="nombre"
+            value="#{caracteristicaBean.caracteristica.nombre}"
+            required="true"
+            requiredMessage="El nombre es obligatorio." />
+
+        <h:message for="nombre" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="tipo"
+            value="Tipo de característica:" />
+
+        <h:selectOneMenu
+            id="tipo"
+            value="#{caracteristicaBean.idTipoSeleccionado}"
+            required="true"
+            requiredMessage="Debe seleccionar un tipo.">
+
+            <f:selectItem
+                itemLabel="Seleccione un tipo"
+                itemValue="#{null}"
+                noSelectionOption="true" />
+
+            <f:selectItems
+                value="#{caracteristicaBean.opcionesTipos}" />
+
+        </h:selectOneMenu>
+
+        <h:message for="tipo" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="activo"
+            value="Activo:" />
+
+        <h:selectBooleanCheckbox
+            id="activo"
+            value="#{caracteristicaBean.caracteristica.activo}" />
+
+        <br /><br />
+
+        <h:outputLabel
+            for="observaciones"
+            value="Observaciones:" />
+
+        <h:inputTextarea
+            id="observaciones"
+            value="#{caracteristicaBean.caracteristica.observaciones}" />
+
+        <br /><br />
+
+        <h:commandButton
+            value="#{caracteristicaBean.editando ? 'Guardar cambios' : 'Guardar'}"
+            action="#{caracteristicaBean.guardar}" />
+
+        <h:commandButton
+            value="Cancelar"
+            action="#{caracteristicaBean.cancelar}"
+            immediate="true" />
+
+    </h:form>
+
+    <hr />
+
+    <h2>Lista de características</h2>
+
+    <h:form>
+
+        <h:dataTable
+            value="#{caracteristicaBean.caracteristicas}"
+            var="caracteristica"
+            border="1">
+
+            <h:column>
+
+                <f:facet name="header">
+                    ID
+                </f:facet>
+
+                <h:outputText
+                    value="#{caracteristica.idCaracteristica}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Nombre
+                </f:facet>
+
+                <h:outputText
+                    value="#{caracteristica.nombre}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Tipo
+                </f:facet>
+
+                <h:outputText
+                    value="#{caracteristicaBean.obtenerNombreTipo(caracteristica.idTipoCaracteristica)}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Activo
+                </f:facet>
+
+                <h:outputText
+                    value="#{caracteristica.activo ? 'Sí' : 'No'}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Observaciones
+                </f:facet>
+
+                <h:outputText
+                    value="#{caracteristica.observaciones}" />
+
+            </h:column>
+
+            <h:column>
+
+                <f:facet name="header">
+                    Acciones
+                </f:facet>
+
+                <h:commandButton
+                    value="Editar"
+                    action="#{caracteristicaBean.editar(caracteristica)}" />
+
+                <h:commandButton
+                    value="Eliminar"
+                    action="#{caracteristicaBean.eliminar(caracteristica.idCaracteristica)}" />
+
+            </h:column>
+
+        </h:dataTable>
+
+    </h:form>
+
+</h:body>
+
+</html>
