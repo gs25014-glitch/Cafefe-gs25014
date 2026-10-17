@@ -5,13 +5,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html">
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
 
 <h:head>
     <title>Cajas - Cafefe</title>
+    <link rel="stylesheet" type="text/css" href="css/estilo.css" />
 </h:head>
 
 <h:body>
+
+    <div class="barra">
+        <a href="index.html" class="marca">Cafefe</a>
+        <a href="index.html">← Volver al menú</a>
+    </div>
+
+    <div class="contenedor">
 
     <h1>Cajas - Cafefe</h1>
 
@@ -27,7 +36,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             required="true"
             requiredMessage="El nombre de la caja es obligatorio." />
 
-        <h:message for="nombre" />
+        <h:message errorClass="msg-error" for="nombre" />
 
         <br /><br />
 
@@ -55,44 +64,42 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
     <h2>Lista de cajas</h2>
 
-    <h:form>
+    <h:form id="formLista">
+
+        <h:messages infoClass="msg-info" warnClass="msg-warn" errorClass="msg-error"
+            for="tablaCajas" />
 
         <h:dataTable
+            styleClass="tabla"
+            id="tablaCajas"
             value="#{cajaBean.cajas}"
-            var="caja"
-            border="1">
+            var="caja">
 
             <h:column>
-                <h:outputText value="ID" />
-                <br />
+                <f:facet name="header">ID</f:facet>
                 <h:outputText value="#{caja.idCaja}" />
             </h:column>
 
             <h:column>
-                <h:outputText value="Nombre" />
-                <br />
+                <f:facet name="header">Nombre</f:facet>
                 <h:outputText value="#{caja.nombre}" />
             </h:column>
 
             <h:column>
-                <h:outputText value="Activo" />
-                <br />
-                <h:outputText value="#{caja.activo}" />
+                <f:facet name="header">Activo</f:facet>
+                <h:outputText value="#{caja.activo ? 'Sí' : 'No'}" />
             </h:column>
 
             <h:column>
-                <h:outputText value="Observaciones" />
-                <br />
+                <f:facet name="header">Observaciones</f:facet>
                 <h:outputText value="#{caja.observaciones}" />
             </h:column>
 
             <h:column>
+                <f:facet name="header">Acciones</f:facet>
                 <h:commandButton
                     value="Editar"
                     action="#{cajaBean.editar(caja)}" />
-            </h:column>
-
-            <h:column>
                 <h:commandButton
                     value="Eliminar"
                     action="#{cajaBean.eliminar(caja)}" />
@@ -119,7 +126,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 required="true"
                 requiredMessage="El nombre de la caja es obligatorio." />
 
-            <h:message for="nombreEditar" />
+            <h:message errorClass="msg-error" for="nombreEditar" />
 
             <br /><br />
 
@@ -144,6 +151,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         </h:form>
 
     </h:panelGroup>
+
+    </div>
 
 </h:body>
 

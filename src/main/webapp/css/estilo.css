@@ -1,0 +1,276 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #fbf5e9;
+    color: #3a2418;
+}
+
+.barra {
+    background-color: #4b2e1e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.barra a {
+    color: white;
+    text-decoration: none;
+    padding: 15px 22px;
+}
+
+.barra a:hover {
+    background-color: #b8884a;
+}
+
+.barra .marca {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.contenedor {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+}
+
+h1 {
+    color: #4b2e1e;
+    font-size: 26px;
+    margin: 0 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #b8884a;
+}
+
+h2 {
+    color: #4b2e1e;
+    font-size: 19px;
+    margin: 26px 0 10px;
+}
+
+h3 {
+    color: #4b2e1e;
+    font-size: 16px;
+    margin: 18px 0 6px;
+}
+
+form {
+    background-color: white;
+    border: 1px solid #e3d3b8;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 0 0 20px;
+    overflow-x: auto;
+}
+
+form > br {
+    display: none;
+}
+
+hr {
+    display: none;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin: 14px 0 5px;
+}
+
+form > label:first-child {
+    margin-top: 0;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 14px;
+    border: 1px solid #cdb68f;
+    border-radius: 6px;
+    background-color: white;
+    color: #3a2418;
+}
+
+textarea {
+    min-height: 70px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #b8884a;
+    box-shadow: 0 0 0 2px rgba(184, 136, 74, 0.3);
+}
+
+select:disabled,
+input:disabled,
+textarea:disabled {
+    background-color: #efe7d6;
+    color: #7a6a5a;
+}
+
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #4b2e1e;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    vertical-align: top;
+}
+
+td label {
+    margin: 0;
+    padding: 9px 12px 0 0;
+}
+
+td input[type="checkbox"] {
+    margin-top: 9px;
+}
+
+input[type="submit"],
+button {
+    background-color: #4b2e1e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 18px;
+    margin: 14px 8px 0 0;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background-color: #b8884a;
+}
+
+input[value="Cancelar"],
+input[value="Nuevo"],
+input[value="Limpiar"] {
+    background-color: #e8d9bd;
+    color: #4b2e1e;
+}
+
+input[value="Cancelar"]:hover,
+input[value="Nuevo"]:hover,
+input[value="Limpiar"]:hover {
+    background-color: #d8c49d;
+}
+
+input[value="Eliminar"],
+input[value="Quitar"] {
+    background-color: #8a3b2e;
+}
+
+input[value="Eliminar"]:hover,
+input[value="Quitar"]:hover {
+    background-color: #a8503f;
+}
+
+.tabla {
+    width: 100%;
+    border: 1px solid #e3d3b8;
+    background-color: white;
+    font-size: 14px;
+}
+
+.tabla th {
+    background-color: #4b2e1e;
+    color: white;
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: bold;
+}
+
+.tabla td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #eadfc9;
+    vertical-align: middle;
+}
+
+.tabla tr:nth-child(even) td {
+    background-color: #fbf5e9;
+}
+
+.tabla input[type="submit"] {
+    padding: 5px 12px;
+    margin: 2px 6px 2px 0;
+    font-size: 13px;
+}
+
+.tabla .tabla th {
+    background-color: #b8884a;
+}
+
+/* Mensajes */
+ul {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+}
+
+li.msg-info,
+li.msg-warn,
+li.msg-error {
+    padding: 9px 12px;
+    margin: 6px 0;
+    border-radius: 6px;
+    border-left: 4px solid #b8884a;
+    background-color: #fff7e6;
+}
+
+li.msg-info {
+    border-left-color: #4f7a4a;
+    background-color: #eef6ec;
+    color: #2f5a2a;
+}
+
+li.msg-warn {
+    border-left-color: #b8884a;
+    background-color: #fff3dc;
+    color: #7a5420;
+}
+
+li.msg-error {
+    border-left-color: #8a3b2e;
+    background-color: #fbeceb;
+    color: #8a3b2e;
+}
+
+span.msg-error {
+    display: block;
+    color: #8a3b2e;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+@media (max-width: 600px) {
+    .contenedor {
+        padding: 16px 12px 30px;
+    }
+
+    form {
+        padding: 14px;
+    }
+}

@@ -10,9 +10,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
 <h:head>
     <title>Descuentos - Cafefe</title>
+    <link rel="stylesheet" type="text/css" href="css/estilo.css" />
 </h:head>
 
 <h:body>
+
+    <div class="barra">
+        <a href="index.html" class="marca">Cafefe</a>
+        <a href="index.html">← Volver al menú</a>
+    </div>
+
+    <div class="contenedor">
 
     <h1>Descuentos - Cafefe</h1>
 
@@ -30,7 +38,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             required="true"
             requiredMessage="El nombre es obligatorio." />
 
-        <h:message for="nombre" />
+        <h:message errorClass="msg-error" for="nombre" />
 
         <br /><br />
 
@@ -41,7 +49,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         <h:selectOneMenu
             id="tipo"
             value="#{descuentoBean.idTipoSeleccionado}"
-            required="true"
+            disabled="#{descuentoBean.editando}"
+            required="#{not descuentoBean.editando}"
             requiredMessage="Debe seleccionar un tipo.">
 
             <f:selectItem
@@ -54,7 +63,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
         </h:selectOneMenu>
 
-        <h:message for="tipo" />
+        <h:message errorClass="msg-error" for="tipo" />
 
         <br /><br />
 
@@ -70,11 +79,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
             <f:passThroughAttribute
                 name="type"
-                value="datetime-local" />
+                value="date" />
 
         </h:inputText>
 
-        <h:message for="fechaDesde" />
+        <h:message errorClass="msg-error" for="fechaDesde" />
 
         <br /><br />
 
@@ -88,11 +97,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
             <f:passThroughAttribute
                 name="type"
-                value="datetime-local" />
+                value="date" />
 
         </h:inputText>
 
-        <h:message for="fechaHasta" />
+        <h:message errorClass="msg-error" for="fechaHasta" />
 
         <br />
 
@@ -120,7 +129,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             action="#{descuentoBean.cancelar}"
             immediate="true" />
 
-        <h:messages />
+        <h:messages infoClass="msg-info" warnClass="msg-warn" errorClass="msg-error"
+            globalOnly="true"
+            showSummary="false"
+            showDetail="true" />
 
     </h:form>
 
@@ -131,9 +143,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
     <h:form>
 
         <h:dataTable
+            styleClass="tabla"
             value="#{descuentoBean.descuentos}"
-            var="d"
-            border="1">
+            var="d">
 
             <h:column>
 
@@ -171,7 +183,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                     Fecha desde
                 </f:facet>
 
-                <h:outputText value="#{d.fechaDesde}" />
+                <h:outputText value="#{descuentoBean.fecha(d.fechaDesde)}" />
 
             </h:column>
 
@@ -182,7 +194,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 </f:facet>
 
                 <h:outputText
-                    value="#{empty d.fechaHasta ? 'Sin fecha de finalización' : d.fechaHasta}" />
+                    value="#{empty d.fechaHasta ? 'Sin fecha de finalización' : descuentoBean.fecha(d.fechaHasta)}" />
 
             </h:column>
 
@@ -215,6 +227,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         </h:dataTable>
 
     </h:form>
+
+    </div>
 
 </h:body>
 

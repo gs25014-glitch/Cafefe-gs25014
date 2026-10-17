@@ -10,6 +10,8 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.bean;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.model.SelectItem;
 import java.util.ArrayList;
 import jakarta.faces.view.ViewScoped;
@@ -49,6 +51,9 @@ public class empleadoBean implements Serializable {
     private Empleado empleadoSeleccionado;
 
     private UUID idRolSeleccionado;
+
+    // Al editar el rol solo se muestra (deshabilitado)
+    private UUID idRolEditar;
 
     @PostConstruct
     public void inicializar() {
@@ -115,12 +120,14 @@ public class empleadoBean implements Serializable {
     public void guardar() {
 
         if (idRolSeleccionado == null) {
+            mensajeError("Debe seleccionar un rol.");
             return;
         }
 
         Rol rol = rolService.buscarPorId(idRolSeleccionado);
 
         if (rol == null || !Boolean.TRUE.equals(rol.getActivo())) {
+            mensajeError("No se puede asignar un rol inactivo.");
             return;
         }
 
@@ -137,6 +144,27 @@ public class empleadoBean implements Serializable {
     public void editar(Empleado empleado) {
 
         empleadoSeleccionado = empleado;
+
+        // Se busca su rol actual para mostrarlo deshabilitado
+        EmpleadoRol empleadoRol =
+                empleadoRolService.buscarActivoPorEmpleado(empleado.getIdEmpleado());
+
+        idRolEditar = empleadoRol == null ? null : empleadoRol.getIdRol();
+    }
+
+    private void mensajeError(String texto) {
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, texto, null));
+    }
+
+    public UUID getIdRolEditar() {
+        return idRolEditar;
+    }
+
+    public void setIdRolEditar(UUID idRolEditar) {
+        this.idRolEditar = idRolEditar;
     }
 
     public void actualizar() {

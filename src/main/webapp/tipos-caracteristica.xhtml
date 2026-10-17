@@ -10,9 +10,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
 <h:head>
     <title>Tipos de Características - Cafefe</title>
+    <link rel="stylesheet" type="text/css" href="css/estilo.css" />
 </h:head>
 
 <h:body>
+
+    <div class="barra">
+        <a href="index.html" class="marca">Cafefe</a>
+        <a href="index.html">← Volver al menú</a>
+    </div>
+
+    <div class="contenedor">
 
     <h1>Tipos de Características - Cafefe</h1>
 
@@ -32,7 +40,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             required="true"
             requiredMessage="El nombre es obligatorio." />
 
-        <h:message for="nombre" />
+        <h:message errorClass="msg-error" for="nombre" />
 
         <br /><br />
 
@@ -46,7 +54,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             required="true"
             requiredMessage="La expresión regular es obligatoria." />
 
-        <h:message for="expresionRegular" />
+        <h:message errorClass="msg-error" for="expresionRegular" />
 
         <br /><br />
 
@@ -90,9 +98,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
     <h:form>
 
         <h:dataTable
+            styleClass="tabla"
             value="#{tipoCaracteristicaBean.tiposCaracteristica}"
-            var="tipo"
-            border="1">
+            var="tipo">
 
             <h:column>
 
@@ -168,6 +176,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         </h:dataTable>
 
     </h:form>
+
+    </div>
 
 </h:body>
 

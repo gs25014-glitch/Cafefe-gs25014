@@ -11,92 +11,116 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
-            text-align: center;
+            min-height: 100vh;
+            background: #fbf5e9 url("img/fondo.png") center center / cover no-repeat fixed;
         }
 
-        header {
-            background-color: #333;
-            color: white;
-            padding: 30px;
+        /* Barra del menú */
+        nav {
+            background-color: #4b2e1e;
         }
 
-        h1 {
+        nav ul {
+            list-style: none;
             margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
         }
 
-        .contenedor {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 20px;
+        nav li {
+            position: relative;
         }
 
-        .menu {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .boton {
+        /* Título de cada grupo */
+        .grupo {
             display: block;
-            padding: 20px;
-            background-color: white;
-            color: #333;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 15px 22px;
+            color: white;
+            cursor: pointer;
         }
 
-        .boton:hover {
-            background-color: #eeeeee;
+        nav li:hover .grupo,
+        nav li:focus-within .grupo {
+            background-color: #b8884a;
+        }
+
+        /* Lista desplegable */
+        .sub {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 220px;
+            background-color: #4b2e1e;
+            z-index: 10;
+        }
+
+        nav li:hover .sub,
+        nav li:focus-within .sub {
+            display: block;
+        }
+
+        .sub a {
+            display: block;
+            padding: 12px 22px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .sub a:hover {
+            background-color: #b8884a;
         }
     </style>
 </head>
 
 <body>
 
-    <header>
-        <h1>Cafefe</h1>
-        <p>Sistema de Punto de Venta para Cafetería</p>
-    </header>
+    <nav>
+        <ul>
 
-    <div class="contenedor">
+            <li>
+                <span class="grupo" tabindex="0">Personal ▾</span>
+                <div class="sub">
+                    <a href="roles.xhtml">Roles</a>
+                    <a href="empleados.xhtml">Empleados</a>
+                </div>
+            </li>
 
-        <h2>Menú principal</h2>
+            <li>
+                <span class="grupo" tabindex="0">Características ▾</span>
+                <div class="sub">
+                    <a href="tipos-caracteristica.xhtml">Tipos de característica</a>
+                    <a href="caracteristicas.xhtml">Características</a>
+                </div>
+            </li>
 
-        <div class="menu">
+            <li>
+                <span class="grupo" tabindex="0">Descuentos ▾</span>
+                <div class="sub">
+                    <a href="tipos-descuento.xhtml">Tipos de descuento</a>
+                    <a href="descuentos.xhtml">Descuentos</a>
+                </div>
+            </li>
 
-            <a class="boton" href="productos.xhtml">
-                Productos
-            </a>
+            <li>
+                <span class="grupo" tabindex="0">Productos ▾</span>
+                <div class="sub">
+                    <a href="tipos-producto.xhtml">Tipos de producto</a>
+                    <a href="productos.xhtml">Productos</a>
+                </div>
+            </li>
 
-            <a class="boton" href="tipos-producto.xhtml">
-                Tipos de producto
-            </a>
+            <li>
+                <span class="grupo" tabindex="0">Ventas ▾</span>
+                <div class="sub">
+                    <a href="cajas.xhtml">Cajas</a>
+                    <a href="ordenes.xhtml">Órdenes</a>
+                </div>
+            </li>
 
-            <a class="boton" href="empleados.xhtml">
-                Empleados
-            </a>
-
-            <a class="boton" href="cajas.xhtml">
-                Cajas
-            </a>
-
-            <a class="boton" href="ordenes.xhtml">
-                Órdenes
-            </a>
-
-            <a class="boton" href="pagos.xhtml">
-                Pagos
-            </a>
-
-            <a class="boton" href="rest-productos.html">
-                Productos REST / PWA
-            </a>
-
-        </div>
-
-    </div>
+        </ul>
+    </nav>
 
 </body>
 </html>

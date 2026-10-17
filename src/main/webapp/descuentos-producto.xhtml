@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Descuentos por Producto - Cafefe</title>
+    <meta charset="UTF-8"/>
+</h:head>
+
+<h:body>
+
+    <h1>Asignar descuentos a productos</h1>
+
+    <h:form>
+
+        <h:messages
+            globalOnly="true"
+            style="color:red"/>
+
+        <h:panelGrid columns="2">
+
+            <h:outputLabel
+                value="Producto:" />
+
+            <h:selectOneMenu
+                id="producto"
+                value="#{descuentoProductoBean.idProductoSeleccionado}"
+                required="true"
+                requiredMessage="Debe seleccionar un producto."
+                converter="jakarta.faces.UUID">
+
+                <f:selectItem
+                    itemLabel="Seleccione un producto"
+                    itemValue="#{null}"
+                    noSelectionOption="true"/>
+
+                <f:selectItems
+                    value="#{descuentoProductoBean.productos}"
+                    var="producto"
+                    itemValue="#{producto.idProducto}"
+                    itemLabel="#{producto.nombre}"/>
+
+            </h:selectOneMenu>
+
+
+            <h:outputLabel
+                value="Descuento:" />
+
+            <h:selectOneMenu
+                id="descuento"
+                value="#{descuentoProductoBean.idDescuentoSeleccionado}"
+                required="true"
+                requiredMessage="Debe seleccionar un descuento."
+                converter="jakarta.faces.UUID">
+
+                <f:selectItem
+                    itemLabel="Seleccione un descuento"
+                    itemValue="#{null}"
+                    noSelectionOption="true"/>
+
+                <f:selectItems
+                    value="#{descuentoProductoBean.descuentos}"
+                    var="descuento"
+                    itemValue="#{descuento.idDescuento}"
+                    itemLabel="#{descuento.nombre}"/>
+
+            </h:selectOneMenu>
+
+
+            <h:outputLabel
+                value="Valor del descuento (%):" />
+
+            <h:inputText
+                id="valor"
+                value="#{descuentoProductoBean.descuentoProducto.valor}"
+                required="true"
+                requiredMessage="Debe indicar el valor del descuento.">
+            </h:inputText>
+
+
+            <h:outputLabel
+                value="Fecha desde:" />
+
+            <h:inputText
+                id="fechaDesde"
+                type="datetime-local"
+                value="#{descuentoProductoBean.fechaDesdeTexto}"
+                required="true"
+                requiredMessage="Debe indicar la fecha desde."/>
+
+            
+            <h:outputLabel
+                value="Fecha hasta:" />
+
+            <h:inputText
+                id="fechaHasta"
+                type="datetime-local"
+                value="#{descuentoProductoBean.fechaHastaTexto}"/>
+
+
+            <h:outputLabel
+                value="Observaciones:" />
+
+            <h:inputTextarea
+                value="#{descuentoProductoBean.descuentoProducto.observaciones}"
+                rows="3"
+                cols="30"/>
+
+        </h:panelGrid>
+
+        <br/>
+
+        <h:commandButton
+            value="Asignar descuento"
+            action="#{descuentoProductoBean.guardar}"/>
+
+        <h:commandButton
+            value="Limpiar"
+            action="#{descuentoProductoBean.nuevo}"
+            immediate="true"/>
+
+    </h:form>
+
+
+    <hr/>
+
+    <h2>Descuentos asignados</h2>
+
+    <h:form>
+
+        <h:dataTable
+            value="#{descuentoProductoBean.descuentosProducto}"
+            var="dp"
+            border="1">
+
+            <h:column>
+                <f:facet name="header">
+                    Producto
+                </f:facet>
+
+                #{descuentoProductoBean.nombreProducto(dp.idProducto)}
+            </h:column>
+
+
+            <h:column>
+                <f:facet name="header">
+                    Descuento
+                </f:facet>
+
+                #{descuentoProductoBean.nombreDescuento(dp.idDescuento)}
+            </h:column>
+
+
+            <h:column>
+                <f:facet name="header">
+                    Valor
+                </f:facet>
+
+                #{dp.valor}%
+            </h:column>
+
+
+            <h:column>
+                <f:facet name="header">
+                    Fecha desde
+                </f:facet>
+
+                #{dp.fechaDesde}
+            </h:column>
+
+
+            <h:column>
+                <f:facet name="header">
+                    Fecha hasta
+                </f:facet>
+
+                #{empty dp.fechaHasta ? 'Sin fecha de finalización' : dp.fechaHasta}
+            </h:column>
+
+
+            <h:column>
+                <f:facet name="header">
+                    Observaciones
+                </f:facet>
+
+                #{dp.observaciones}
+            </h:column>
+
+
+            <h:column>
+                <f:facet name="header">
+                    Acción
+                </f:facet>
+
+                <h:commandButton
+                    value="Eliminar"
+                    action="#{descuentoProductoBean.eliminar(dp.idDescuentoProducto)}"/>
+            </h:column>
+
+        </h:dataTable>
+
+    </h:form>
+
+</h:body>
+</html>

@@ -10,9 +10,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
 <h:head>
     <title>Características - Cafefe</title>
+    <link rel="stylesheet" type="text/css" href="css/estilo.css" />
 </h:head>
 
 <h:body>
+
+    <div class="barra">
+        <a href="index.html" class="marca">Cafefe</a>
+        <a href="index.html">← Volver al menú</a>
+    </div>
+
+    <div class="contenedor">
 
     <h1>Características - Cafefe</h1>
 
@@ -30,7 +38,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             required="true"
             requiredMessage="El nombre es obligatorio." />
 
-        <h:message for="nombre" />
+        <h:message errorClass="msg-error" for="nombre" />
 
         <br /><br />
 
@@ -41,7 +49,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         <h:selectOneMenu
             id="tipo"
             value="#{caracteristicaBean.idTipoSeleccionado}"
-            required="true"
+            disabled="#{caracteristicaBean.editando}"
+            required="#{not caracteristicaBean.editando}"
             requiredMessage="Debe seleccionar un tipo.">
 
             <f:selectItem
@@ -54,7 +63,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
         </h:selectOneMenu>
 
-        <h:message for="tipo" />
+        <h:message errorClass="msg-error" for="tipo" />
 
         <br /><br />
 
@@ -96,9 +105,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
     <h:form>
 
         <h:dataTable
+            styleClass="tabla"
             value="#{caracteristicaBean.caracteristicas}"
-            var="caracteristica"
-            border="1">
+            var="caracteristica">
 
             <h:column>
 
@@ -174,6 +183,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         </h:dataTable>
 
     </h:form>
+
+    </div>
 
 </h:body>
 

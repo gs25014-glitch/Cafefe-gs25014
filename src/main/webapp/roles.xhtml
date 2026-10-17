@@ -10,9 +10,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
 <h:head>
     <title>Roles - Cafefe</title>
+    <link rel="stylesheet" type="text/css" href="css/estilo.css" />
 </h:head>
 
 <h:body>
+
+    <div class="barra">
+        <a href="index.html" class="marca">Cafefe</a>
+        <a href="index.html">← Volver al menú</a>
+    </div>
+
+    <div class="contenedor">
 
     <h1>Roles</h1>
 
@@ -65,15 +73,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             rendered="#{rolBean.editando}"
         />
 
-        <h:messages />
+        <h:messages infoClass="msg-info" warnClass="msg-warn" errorClass="msg-error" />
 
-        <br/>
-        <br/>
+    </h:form>
+
+    <br/>
+
+    <!-- La tabla va en su propio formulario para que Editar y Eliminar
+         no validen el campo Nombre del formulario de arriba -->
+    <h:form id="formLista">
 
         <h:dataTable
+            styleClass="tabla"
             value="#{rolBean.roles}"
             var="item"
-            border="1"
             rendered="#{not empty rolBean.roles}"
         >
 
@@ -110,13 +123,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         </h:dataTable>
 
     </h:form>
-
-    <br/>
-
-    <h:link
-        outcome="index"
-        value="Volver al menú"
-    />
+    </div>
 
 </h:body>
 

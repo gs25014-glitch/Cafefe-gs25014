@@ -5,9 +5,17 @@
 
 <h:head>
     <title>Productos - Cafefe</title>
+    <link rel="stylesheet" type="text/css" href="css/estilo.css" />
 </h:head>
 
 <h:body>
+
+    <div class="barra">
+        <a href="index.html" class="marca">Cafefe</a>
+        <a href="index.html">← Volver al menú</a>
+    </div>
+
+    <div class="contenedor">
 
     <h1>Productos - Cafefe</h1>
 
@@ -30,7 +38,7 @@
             required="true"
             requiredMessage="El nombre del producto es obligatorio." />
 
-        <h:message for="nombre" />
+        <h:message errorClass="msg-error" for="nombre" />
 
         <br /><br />
 
@@ -51,7 +59,7 @@
 
         </h:inputText>
 
-        <h:message for="precio" />
+        <h:message errorClass="msg-error" for="precio" />
 
         <br /><br />
 
@@ -92,7 +100,7 @@
 
         </h:selectOneMenu>
 
-        <h:message for="tipoProducto" />
+        <h:message errorClass="msg-error" for="tipoProducto" />
 
         <br /><br />
 
@@ -138,9 +146,8 @@
 
 
         <!-- Mensajes -->
-        <h:messages
-            globalOnly="true"
-            style="color:red;" />
+        <h:messages infoClass="msg-info" warnClass="msg-warn" errorClass="msg-error"
+            globalOnly="true" />
 
         <br />
 
@@ -172,119 +179,241 @@
 
     <h:form id="formLista">
 
+        <h:messages infoClass="msg-info" warnClass="msg-warn" errorClass="msg-error"
+            for="tablaProductos" />
+
         <h:dataTable
+            styleClass="tabla"
+            id="tablaProductos"
             value="#{productoBean.productos}"
-            var="producto"
-            border="1">
+            var="producto">
 
             <!-- ID -->
             <h:column>
-
-                <h:outputText value="ID" />
-
-                <br />
-
+                <f:facet name="header">ID</f:facet>
                 <h:outputText
                     value="#{producto.idProducto}" />
-
             </h:column>
 
 
             <!-- Nombre -->
             <h:column>
-
-                <h:outputText value="Nombre" />
-
-                <br />
-
+                <f:facet name="header">Nombre</f:facet>
                 <h:outputText
                     value="#{producto.nombre}" />
-
             </h:column>
 
 
             <!-- Precio -->
             <h:column>
-
-                <h:outputText value="Precio" />
-
-                <br />
-
+                <f:facet name="header">Precio</f:facet>
                 <h:outputText
                     value="#{producto.precioSugerido}" />
-
             </h:column>
 
 
             <!-- Tipo de producto -->
             <h:column>
-
-                <h:outputText value="Tipo de producto" />
-
-                <br />
-
+                <f:facet name="header">Tipo de producto</f:facet>
                 <h:outputText
                     value="#{productoBean.tipoDeProducto(producto)}" />
-
             </h:column>
 
 
             <!-- Características -->
             <h:column>
-
-                <h:outputText value="Características" />
-
-                <br />
-
+                <f:facet name="header">Características</f:facet>
                 <h:outputText
                     value="#{productoBean.caracteristicasDeProducto(producto)}" />
+            </h:column>
 
+
+            <!-- Descuentos -->
+            <h:column>
+                <f:facet name="header">Descuentos</f:facet>
+                <h:outputText
+                    value="#{productoBean.descuentosDeProducto(producto)}" />
             </h:column>
 
 
             <!-- Activo -->
             <h:column>
-
-                <h:outputText value="Activo" />
-
-                <br />
-
+                <f:facet name="header">Activo</f:facet>
                 <h:outputText
-                    value="#{producto.activo}" />
-
+                    value="#{producto.activo ? 'Sí' : 'No'}" />
             </h:column>
 
 
             <!-- Comentarios -->
             <h:column>
-
-                <h:outputText value="Comentarios" />
-
-                <br />
-
+                <f:facet name="header">Comentarios</f:facet>
                 <h:outputText
                     value="#{producto.comentarios}" />
-
             </h:column>
 
 
-            <!-- Editar -->
+            <!-- Acciones -->
             <h:column>
-
+                <f:facet name="header">Acciones</f:facet>
                 <h:commandButton
                     value="Editar"
                     action="#{productoBean.editar(producto)}" />
-
-            </h:column>
-
-
-            <!-- Eliminar -->
-            <h:column>
-
                 <h:commandButton
                     value="Eliminar"
                     action="#{productoBean.eliminar(producto)}" />
+            </h:column>
 
+        </h:dataTable>
+
+    </h:form>
+
+
+    <hr />
+
+
+    <!-- ============================= -->
+    <!-- ASIGNAR DESCUENTO A PRODUCTO -->
+    <!-- ============================= -->
+
+    <h2>Asignar descuento a producto</h2>
+
+    <h:form id="formDescuento">
+
+        <h:outputLabel for="productoDescuento" value="Producto:" />
+
+        <h:selectOneMenu
+            id="productoDescuento"
+            value="#{productoBean.idProductoDescuento}"
+            required="true"
+            requiredMessage="Debe seleccionar un producto.">
+
+            <f:selectItem
+                itemLabel="Seleccione un producto"
+                itemValue="#{null}"
+                noSelectionOption="true" />
+
+            <f:selectItems
+                value="#{productoBean.productosActivos}"
+                var="p"
+                itemValue="#{p.idProducto}"
+                itemLabel="#{p.nombre}" />
+
+        </h:selectOneMenu>
+
+        <h:message errorClass="msg-error" for="productoDescuento" />
+
+        <br /><br />
+
+
+        <h:outputLabel for="descuentoProducto" value="Descuento:" />
+
+        <h:selectOneMenu
+            id="descuentoProducto"
+            value="#{productoBean.idDescuentoSeleccionado}"
+            required="true"
+            requiredMessage="Debe seleccionar un descuento.">
+
+            <f:selectItem
+                itemLabel="Seleccione un descuento"
+                itemValue="#{null}"
+                noSelectionOption="true" />
+
+            <f:selectItems
+                value="#{productoBean.descuentosDisponibles}"
+                var="d"
+                itemValue="#{d.idDescuento}"
+                itemLabel="#{productoBean.etiquetaDescuento(d)}" />
+
+        </h:selectOneMenu>
+
+        <h:message errorClass="msg-error" for="descuentoProducto" />
+
+        <br /><br />
+
+
+        <h:outputLabel for="fechaDesdeDescuento" value="Fecha desde:" />
+
+        <h:inputText
+            id="fechaDesdeDescuento"
+            value="#{productoBean.fechaDesdeDescuento}">
+
+            <f:passThroughAttribute name="type" value="date" />
+
+        </h:inputText>
+
+        <br /><br />
+
+
+        <h:outputLabel for="fechaHastaDescuento" value="Fecha hasta:" />
+
+        <h:inputText
+            id="fechaHastaDescuento"
+            value="#{productoBean.fechaHastaDescuento}">
+
+            <f:passThroughAttribute name="type" value="date" />
+
+        </h:inputText>
+
+        <br />
+
+        <h:outputText value="Si no pones fechas se usan las del descuento." />
+
+        <br /><br />
+
+
+        <h:messages infoClass="msg-info" warnClass="msg-warn" errorClass="msg-error"
+            for="botonAsignar" />
+
+        <br />
+
+        <h:commandButton
+            id="botonAsignar"
+            value="Asignar descuento"
+            action="#{productoBean.asignarDescuento}" />
+
+    </h:form>
+
+
+    <h3>Descuentos asignados</h3>
+
+    <h:form id="formAsignaciones">
+
+        <h:dataTable
+            styleClass="tabla"
+            value="#{productoBean.asignaciones}"
+            var="a">
+
+            <h:column>
+                <f:facet name="header">Producto</f:facet>
+                <h:outputText value="#{productoBean.nombreProducto(a.idProducto)}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Descuento</f:facet>
+                <h:outputText value="#{productoBean.nombreDescuento(a.idDescuento)}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Valor (%)</f:facet>
+                <h:outputText value="#{a.valor}%" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Desde</f:facet>
+                <h:outputText value="#{productoBean.fecha(a.fechaDesde)}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Hasta</f:facet>
+                <h:outputText
+                    value="#{empty a.fechaHasta ? 'Sin fecha de finalización' : productoBean.fecha(a.fechaHasta)}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Acciones</f:facet>
+                <h:commandButton
+                    value="Quitar"
+                    action="#{productoBean.quitarDescuento(a)}" />
             </h:column>
 
         </h:dataTable>
@@ -316,7 +445,7 @@
                 required="true"
                 requiredMessage="El nombre es obligatorio." />
 
-            <h:message for="nombreEditar" />
+            <h:message errorClass="msg-error" for="nombreEditar" />
 
             <br /><br />
 
@@ -337,7 +466,72 @@
 
             </h:inputText>
 
-            <h:message for="precioEditar" />
+            <h:message errorClass="msg-error" for="precioEditar" />
+
+            <br /><br />
+
+
+            <!-- Tipo de producto (solo se elige al crear) -->
+            <h:outputLabel
+                for="tipoEditar"
+                value="Tipo de producto:" />
+
+            <h:selectOneMenu
+                id="tipoEditar"
+                value="#{productoBean.idTipoProductoEditar}"
+                disabled="true">
+
+                <f:selectItem
+                    itemLabel="Sin tipo"
+                    itemValue="#{null}"
+                    noSelectionOption="true" />
+
+                <f:selectItems
+                    value="#{productoBean.tiposProductoTodos}"
+                    var="tipoEd"
+                    itemValue="#{tipoEd.idTipoProducto}"
+                    itemLabel="#{tipoEd.nombre}" />
+
+            </h:selectOneMenu>
+
+            <br /><br />
+
+
+            <!-- Característica (solo se elige al crear) -->
+            <h:outputLabel
+                for="caracteristicaEditar"
+                value="Característica:" />
+
+            <h:selectOneMenu
+                id="caracteristicaEditar"
+                value="#{productoBean.idCaracteristicaEditar}"
+                disabled="true">
+
+                <f:selectItem
+                    itemLabel="Sin característica"
+                    itemValue="#{null}"
+                    noSelectionOption="true" />
+
+                <f:selectItems
+                    value="#{productoBean.caracteristicasTodas}"
+                    var="caracEd"
+                    itemValue="#{caracEd.idCaracteristica}"
+                    itemLabel="#{caracEd.nombre}" />
+
+            </h:selectOneMenu>
+
+            <br /><br />
+
+
+            <!-- Valor de característica -->
+            <h:outputLabel
+                for="valorCaracteristicaEditar"
+                value="Valor de característica:" />
+
+            <h:inputText
+                id="valorCaracteristicaEditar"
+                value="#{productoBean.valorCaracteristicaEditar}"
+                disabled="true" />
 
             <br /><br />
 
@@ -371,9 +565,17 @@
                 value="Actualizar"
                 action="#{productoBean.actualizar}" />
 
+            <!-- Cancelar -->
+            <h:commandButton
+                value="Cancelar"
+                action="#{productoBean.cancelarEdicion}"
+                immediate="true" />
+
         </h:form>
 
     </h:panelGroup>
+
+    </div>
 
 </h:body>
 

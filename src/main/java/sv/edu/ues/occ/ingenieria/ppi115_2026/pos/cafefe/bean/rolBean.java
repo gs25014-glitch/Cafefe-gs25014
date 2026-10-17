@@ -10,6 +10,8 @@ package sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.bean;
  */
 
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -65,9 +67,23 @@ public class rolBean implements Serializable {
     }
 
     public void eliminar(UUID id) {
-        rolService.eliminar(id);
+
+        try {
+            rolService.eliminar(id);
+        } catch (Exception e) {
+            // Pasa si el rol ya está asignado a un empleado
+            mensajeError("No se puede eliminar el rol porque está asignado a un empleado.");
+        }
+
         cargarRoles();
         nuevo();
+    }
+
+    private void mensajeError(String texto) {
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, texto, null));
     }
 
     public void cancelar() {
@@ -89,4 +105,4 @@ public class rolBean implements Serializable {
     public boolean isEditando() {
         return editando;
     }
-}
+}   

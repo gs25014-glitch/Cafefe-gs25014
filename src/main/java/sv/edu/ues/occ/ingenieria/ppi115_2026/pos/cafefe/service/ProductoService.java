@@ -14,9 +14,13 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
+import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.DescuentoProducto;
+import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.OrdenProducto;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.Producto;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.ProductoCaracteristica;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.ProductoTipoProducto;
+import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.repository.DescuentoProductoRepository;
+import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.repository.OrdenProductoRepository;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.repository.ProductoRepository;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.repository.ProductoCaracteristicaRepository;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.repository.ProductoTipoProductoRepository;
@@ -31,6 +35,12 @@ public class ProductoService {
 
     @Inject
     private ProductoCaracteristicaRepository productoCaracteristicaRepository;
+
+    @Inject
+    private DescuentoProductoRepository descuentoProductoRepository;
+
+    @Inject
+    private OrdenProductoRepository ordenProductoRepository;
 
     protected ProductoService() {
     }
@@ -95,6 +105,44 @@ public class ProductoService {
     @Transactional
     public Producto actualizar(Producto producto) {
         return productoRepository.actualizar(producto);
+    }
+
+    // Dice por qué un producto no se puede eliminar. Si no tiene nada
+    // relacionado devuelve null.
+    public String motivoNoEliminar(UUID idProducto) {
+
+        String motivo = "";
+
+        if (productoTipoProductoRepository.buscarPorProducto(idProducto) != null) {
+            motivo = motivo + " tiene un tipo de producto asignado;";
+        }
+
+        int caracteristicas =
+                productoCaracteristicaRepository.listarPorProducto(idProducto).size();
+
+        if (caracteristicas > 0) {
+            motivo = motivo + " tiene " + caracteristicas + " característica(s);";
+        }
+
+        int descuentos = descuentoProductoRepository.listarPorProducto(idProducto).size();
+
+        if (descuentos > 0) {
+            motivo = motivo + " tiene " + descuentos + " descuento(s) asignado(s);";
+        }
+
+        int ordenes = 0;
+
+        for (OrdenProducto op : ordenProductoRepository.listar()) {
+            if (idProducto.equals(op.getIdProducto())) {
+                ordenes++;
+            }
+        }
+
+        if (ordenes > 0) {
+            motivo = motivo + " está en " + ordenes + " orden(es);";
+        }
+
+        return motivo.isEmpty() ? null : motivo;
     }
 
     @Transactional

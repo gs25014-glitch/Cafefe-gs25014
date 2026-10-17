@@ -10,6 +10,8 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.bean;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -73,8 +75,30 @@ public class cajaBean implements Serializable {
     }
 
     public void eliminar(Caja caja) {
-        cajaService.eliminar(caja.getIdCaja());
+
+        // Si tiene facturas no se elimina y se avisa por qué
+        String motivo = cajaService.motivoNoEliminar(caja.getIdCaja());
+
+        if (motivo != null) {
+            mensajeLista(FacesMessage.SEVERITY_ERROR, "No se puede eliminar \""
+                    + caja.getNombre() + "\" porque " + motivo + ".");
+            return;
+        }
+
+        try {
+            cajaService.eliminar(caja.getIdCaja());
+            mensajeLista(FacesMessage.SEVERITY_INFO, "Caja eliminada correctamente.");
+        } catch (Exception e) {
+            mensajeLista(FacesMessage.SEVERITY_ERROR, "No se pudo eliminar la caja.");
+        }
 
         cajas = cajaService.listar();
+    }
+
+    private void mensajeLista(FacesMessage.Severity tipo, String mensaje) {
+
+        FacesContext.getCurrentInstance().addMessage(
+                "formLista:tablaCajas",
+                new FacesMessage(tipo, mensaje, null));
     }
 }

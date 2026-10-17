@@ -30,4 +30,8 @@ public class EmpleadoRolService {
     public EmpleadoRol buscarActivoPorEmpleado(UUID idEmpleado) {
         return empleadoRolRepository.buscarActivoPorEmpleado(idEmpleado);
     }
+
+    public EmpleadoRol buscarPorId(UUID id) {
+        return empleadoRolRepository.buscarPorId(id);
+    }
 }

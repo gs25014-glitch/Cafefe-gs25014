@@ -1,15 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.bean;
 
-/**
- *
- * @author kelvi
- */
-
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -57,13 +50,37 @@ public class tipoDescuentoBean implements Serializable {
 
     public void guardar() {
 
+        if (tipoDescuento.getNombre() == null
+                || tipoDescuento.getNombre().trim().isEmpty()) {
+
+            mensajeError("Debe ingresar el nombre del tipo de descuento.");
+            return;
+        }
+
+        if (tipoDescuento.getDescuentoMaximo() == null) {
+
+            mensajeError("Debe ingresar el límite máximo de descuento.");
+            return;
+        }
+
+        if (tipoDescuento.getDescuentoMaximo() < 0
+                || tipoDescuento.getDescuentoMaximo() > 100) {
+
+            mensajeError("El límite máximo debe estar entre 0 y 100.");
+            return;
+        }
+
         if (editando) {
 
             tipoDescuentoService.actualizar(tipoDescuento);
 
+            mensajeExito("Tipo de descuento actualizado correctamente.");
+
         } else {
 
             tipoDescuentoService.guardar(tipoDescuento);
+
+            mensajeExito("Tipo de descuento guardado correctamente.");
         }
 
         cargarTipos();
@@ -79,7 +96,18 @@ public class tipoDescuentoBean implements Serializable {
 
     public void eliminar(UUID id) {
 
-        tipoDescuentoService.eliminar(id);
+        try {
+
+            tipoDescuentoService.eliminar(id);
+
+            mensajeExito("Tipo de descuento eliminado correctamente.");
+
+        } catch (Exception e) {
+
+            mensajeError(
+                    "No se puede eliminar el tipo de descuento porque está siendo utilizado."
+            );
+        }
 
         cargarTipos();
         nuevo();
@@ -87,6 +115,30 @@ public class tipoDescuentoBean implements Serializable {
 
     public void cancelar() {
         nuevo();
+    }
+
+    private void mensajeError(String mensaje) {
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(
+                        FacesMessage.SEVERITY_ERROR,
+                        mensaje,
+                        null
+                )
+        );
+    }
+
+    private void mensajeExito(String mensaje) {
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(
+                        FacesMessage.SEVERITY_INFO,
+                        mensaje,
+                        null
+                )
+        );
     }
 
     public List<TipoDescuento> getTiposDescuento() {

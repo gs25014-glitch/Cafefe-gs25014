@@ -5,9 +5,17 @@
 
 <h:head>
     <title>Tipos de producto - Cafefe</title>
+    <link rel="stylesheet" type="text/css" href="css/estilo.css" />
 </h:head>
 
 <h:body>
+
+    <div class="barra">
+        <a href="index.html" class="marca">Cafefe</a>
+        <a href="index.html">← Volver al menú</a>
+    </div>
+
+    <div class="contenedor">
 
     <h1>Tipos de producto - Cafefe</h1>
 
@@ -23,7 +31,7 @@
             required="true"
             requiredMessage="El nombre es obligatorio." />
 
-        <h:message for="nombre" />
+        <h:message errorClass="msg-error" for="nombre" />
 
         <br /><br />
 
@@ -54,45 +62,39 @@
     <h:form>
 
         <h:dataTable
+            styleClass="tabla"
             value="#{tipoProductoBean.tiposProducto}"
-            var="tipoProducto"
-            border="1">
+            var="tipoProducto">
 
             <h:column>
-                <h:outputText value="ID" />
-                <br />
+                <f:facet name="header">ID</f:facet>
                 <h:outputText
                     value="#{tipoProducto.idTipoProducto}" />
             </h:column>
 
             <h:column>
-                <h:outputText value="Nombre" />
-                <br />
+                <f:facet name="header">Nombre</f:facet>
                 <h:outputText
                     value="#{tipoProducto.nombre}" />
             </h:column>
 
             <h:column>
-                <h:outputText value="Activo" />
-                <br />
+                <f:facet name="header">Activo</f:facet>
                 <h:outputText
-                    value="#{tipoProducto.activo}" />
+                    value="#{tipoProducto.activo ? 'Sí' : 'No'}" />
             </h:column>
 
             <h:column>
-                <h:outputText value="Observaciones" />
-                <br />
+                <f:facet name="header">Observaciones</f:facet>
                 <h:outputText
                     value="#{tipoProducto.observaciones}" />
             </h:column>
 
             <h:column>
+                <f:facet name="header">Acciones</f:facet>
                 <h:commandButton
                     value="Editar"
                     action="#{tipoProductoBean.editar(tipoProducto)}" />
-            </h:column>
-
-            <h:column>
                 <h:commandButton
                     value="Eliminar"
                     action="#{tipoProductoBean.eliminar(tipoProducto)}" />
@@ -119,7 +121,7 @@
                 required="true"
                 requiredMessage="El nombre es obligatorio." />
 
-            <h:message for="nombreEditar" />
+            <h:message errorClass="msg-error" for="nombreEditar" />
 
             <br /><br />
 
@@ -144,6 +146,8 @@
         </h:form>
 
     </h:panelGroup>
+
+    </div>
 
 </h:body>
 

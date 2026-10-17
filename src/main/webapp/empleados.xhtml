@@ -10,9 +10,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
 <h:head>
     <title>Empleados - Cafefe</title>
+    <link rel="stylesheet" type="text/css" href="css/estilo.css" />
 </h:head>
 
 <h:body>
+
+    <div class="barra">
+        <a href="index.html" class="marca">Cafefe</a>
+        <a href="index.html">← Volver al menú</a>
+    </div>
+
+    <div class="contenedor">
 
     <h1>Empleados - Cafefe</h1>
 
@@ -30,7 +38,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             required="true"
             requiredMessage="El nombre es obligatorio." />
 
-        <h:message for="nombre" />
+        <h:message errorClass="msg-error" for="nombre" />
 
         <br /><br />
 
@@ -44,7 +52,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             required="true"
             requiredMessage="El apellido es obligatorio." />
 
-        <h:message for="apellido" />
+        <h:message errorClass="msg-error" for="apellido" />
 
         <br /><br />
 
@@ -77,7 +85,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
         </h:selectOneMenu>
 
-        <h:message for="rol" />
+        <h:message errorClass="msg-error" for="rol" />
 
         <br /><br />
 
@@ -90,6 +98,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             value="#{empleadoBean.empleado.comentarios}" />
 
         <br /><br />
+
+        <h:messages infoClass="msg-info" warnClass="msg-warn" errorClass="msg-error" globalOnly="true" />
 
         <h:commandButton
             value="Guardar empleado"
@@ -104,9 +114,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
     <h:form>
 
         <h:dataTable
+            styleClass="tabla"
             value="#{empleadoBean.empleados}"
-            var="empleado"
-            border="1">
+            var="empleado">
 
             <h:column>
 
@@ -213,7 +223,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 required="true"
                 requiredMessage="El nombre es obligatorio." />
 
-            <h:message for="nombreEditar" />
+            <h:message errorClass="msg-error" for="nombreEditar" />
 
             <br /><br />
 
@@ -227,7 +237,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 required="true"
                 requiredMessage="El apellido es obligatorio." />
 
-            <h:message for="apellidoEditar" />
+            <h:message errorClass="msg-error" for="apellidoEditar" />
 
             <br /><br />
 
@@ -238,6 +248,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             <h:selectBooleanCheckbox
                 id="activoEditar"
                 value="#{empleadoBean.empleadoSeleccionado.activo}" />
+
+            <br /><br />
+
+            <h:outputLabel for="rolEditar" value="Rol:" />
+
+            <h:selectOneMenu
+                id="rolEditar"
+                value="#{empleadoBean.idRolEditar}"
+                disabled="true">
+
+                <f:selectItems
+                    value="#{empleadoBean.opcionesRoles}" />
+
+            </h:selectOneMenu>
 
             <br /><br />
 
@@ -258,6 +282,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         </h:form>
 
     </h:panelGroup>
+
+    </div>
 
 </h:body>
 

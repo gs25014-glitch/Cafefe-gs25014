@@ -17,10 +17,9 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -34,14 +33,6 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.service.TipoDescuentoSer
 public class descuentoBean implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    // El calendario (input datetime-local) entrega "2026-10-01T14:30" sin zona;
-    // se interpreta en la zona horaria de El Salvador (UTC-6), sin importar
-    // la zona del servidor o del contenedor Docker.
-    private static final ZoneId ZONA = ZoneId.of("America/El_Salvador");
-
-    private static final DateTimeFormatter FORMATO_CALENDARIO =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
     @Inject
     private DescuentoService descuentoService;
@@ -120,14 +111,14 @@ public class descuentoBean implements Serializable {
 
         try {
 
-            OffsetDateTime fechaDesde = textoAFecha(fechaDesdeTexto);
+            OffsetDateTime fechaDesde = inicioDelDia(fechaDesdeTexto);
 
             OffsetDateTime fechaHasta = null;
 
             if (fechaHastaTexto != null
                     && !fechaHastaTexto.trim().isEmpty()) {
 
-                fechaHasta = textoAFecha(fechaHastaTexto);
+                fechaHasta = finDelDia(fechaHastaTexto);
             }
 
             descuento.setIdTipoDescuento(idTipoSeleccionado);
@@ -169,24 +160,26 @@ public class descuentoBean implements Serializable {
         }
     }
 
-    // "2026-10-01T14:30" (calendario) -> OffsetDateTime en zona El Salvador
-    private OffsetDateTime textoAFecha(String texto) {
-
-        return LocalDateTime.parse(texto.trim())
-                .atZone(ZONA)
-                .toOffsetDateTime();
-    }
-
-    // OffsetDateTime -> "2026-10-01T14:30" para rellenar el calendario
-    private String fechaATexto(OffsetDateTime fecha) {
+    // Fecha sin hora para mostrar en la tabla
+    public String fecha(OffsetDateTime fecha) {
 
         if (fecha == null) {
             return "";
         }
 
-        return fecha.atZoneSameInstant(ZONA)
-                .toLocalDateTime()
-                .format(FORMATO_CALENDARIO);
+        return fecha.atZoneSameInstant(ZONA).toLocalDate().toString();
+    }
+
+    private static final ZoneId ZONA = ZoneId.of("America/El_Salvador");
+
+    // "2026-10-01" (calendario) -> inicio de ese día
+    private OffsetDateTime inicioDelDia(String texto) {
+        return LocalDate.parse(texto.trim()).atStartOfDay(ZONA).toOffsetDateTime();
+    }
+
+    // "2026-10-01" (calendario) -> final de ese día, para que cuente completo
+    private OffsetDateTime finDelDia(String texto) {
+        return LocalDate.parse(texto.trim()).atTime(23, 59, 59).atZone(ZONA).toOffsetDateTime();
     }
 
     public void editar(Descuento descuentoSeleccionado) {
@@ -197,10 +190,10 @@ public class descuentoBean implements Serializable {
                 descuentoSeleccionado.getIdTipoDescuento();
 
         fechaDesdeTexto =
-                fechaATexto(descuentoSeleccionado.getFechaDesde());
+                fecha(descuentoSeleccionado.getFechaDesde());
 
         fechaHastaTexto =
-                fechaATexto(descuentoSeleccionado.getFechaHasta());
+                fecha(descuentoSeleccionado.getFechaHasta());
 
         editando = true;
     }
