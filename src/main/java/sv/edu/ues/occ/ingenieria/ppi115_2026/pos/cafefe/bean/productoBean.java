@@ -232,11 +232,16 @@ public class productoBean implements Serializable {
             caracteristicas.add(relacion);
         }
 
-        productoService.guardarProductoCompleto(
-                producto,
-                idTipoProductoSeleccionado,
-                caracteristicas
-        );
+        try {
+            productoService.guardarProductoCompleto(
+                    producto,
+                    idTipoProductoSeleccionado,
+                    caracteristicas
+            );
+        } catch (Exception e) {
+            mensajeError("No se pudo guardar el producto. Revise los datos e intente de nuevo.");
+            return;
+        }
 
         productos = productoService.listar();
 
@@ -326,7 +331,13 @@ public class productoBean implements Serializable {
 
     public void actualizar() {
 
-        productoService.actualizar(productoSeleccionado);
+        try {
+            productoService.actualizar(productoSeleccionado);
+        } catch (IllegalArgumentException e) {
+            mensajeError(e.getMessage());
+        } catch (Exception e) {
+            mensajeError("No se pudo actualizar el producto. Revise los datos e intente de nuevo.");
+        }
 
         productos = productoService.listar();
 
@@ -411,7 +422,11 @@ public class productoBean implements Serializable {
 
     public void quitarDescuento(DescuentoProducto dp) {
 
-        descuentoProductoService.eliminar(dp.getIdDescuentoProducto());
+        try {
+            descuentoProductoService.eliminar(dp.getIdDescuentoProducto());
+        } catch (Exception e) {
+            mensajeDescuento(FacesMessage.SEVERITY_ERROR, "No se pudo quitar el descuento.");
+        }
     }
 
     public void limpiarDescuento() {

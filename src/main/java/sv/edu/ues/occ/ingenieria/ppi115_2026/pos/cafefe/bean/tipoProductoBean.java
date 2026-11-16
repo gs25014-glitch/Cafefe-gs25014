@@ -10,6 +10,8 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.bean;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -53,7 +55,12 @@ public class tipoProductoBean implements Serializable {
     public void guardar() {
         tipoProducto.setIdTipoProducto(UUID.randomUUID());
 
-        tipoProductoService.guardar(tipoProducto);
+        try {
+            tipoProductoService.guardar(tipoProducto);
+        } catch (Exception e) {
+            mensajeError("No se pudo guardar el tipo de producto. Revise los datos e intente de nuevo.");
+            return;
+        }
 
         tiposProducto = tipoProductoService.listar();
 
@@ -65,7 +72,13 @@ public class tipoProductoBean implements Serializable {
     }
 
     public void actualizar() {
-        tipoProductoService.actualizar(tipoProductoSeleccionado);
+        try {
+            tipoProductoService.actualizar(tipoProductoSeleccionado);
+        } catch (IllegalArgumentException e) {
+            mensajeError(e.getMessage());
+        } catch (Exception e) {
+            mensajeError("No se pudo actualizar el tipo de producto. Revise los datos e intente de nuevo.");
+        }
 
         tiposProducto = tipoProductoService.listar();
 
@@ -73,8 +86,21 @@ public class tipoProductoBean implements Serializable {
     }
 
     public void eliminar(TipoProducto tipoProducto) {
-        tipoProductoService.eliminar(tipoProducto.getIdTipoProducto());
+        try {
+            tipoProductoService.eliminar(tipoProducto.getIdTipoProducto());
+        } catch (Exception e) {
+            // Pasa si algún producto usa este tipo
+            mensajeError("No se puede eliminar el tipo porque hay productos que lo usan.");
+        }
 
         tiposProducto = tipoProductoService.listar();
     }
+
+    private void mensajeError(String texto) {
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, texto, null));
+    }
+
 }

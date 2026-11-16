@@ -47,9 +47,6 @@ import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.EmpleadoRol;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.service.EmpleadoRolService;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.Factura;
 import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.entity.FacturaOrdenProducto;
-import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.service.FacturaService;
-import sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.service.FacturaOrdenProductoService;
-import jakarta.transaction.Transactional;
 
 @Named("ordenBean")
 @ViewScoped
@@ -78,12 +75,6 @@ public class ordenBean implements Serializable {
 
     @Inject
     private CajaService cajaService;
-
-    @Inject
-    private FacturaService facturaService;
-
-    @Inject
-    private FacturaOrdenProductoService facturaOrdenProductoService;
 
     @Inject
     private DescuentoService descuentoService;
@@ -356,75 +347,81 @@ public class ordenBean implements Serializable {
             return;
         }
 
-        Descuento descuento = descuentoService.buscarPorId(descuentoSeleccionado);
+        try {
 
-        int aplicados = 0;
-        int yaAplicados = 0;
-        String motivos = "";
+            Descuento descuento = descuentoService.buscarPorId(descuentoSeleccionado);
 
-        for (OrdenProducto detalle : productosOrden) {
+            int aplicados = 0;
+            int yaAplicados = 0;
+            String motivos = "";
 
-            String clave = detalle.getIdOrdenProducto() + "|" + descuentoSeleccionado;
+            for (OrdenProducto detalle : productosOrden) {
 
-            // No aplicar el mismo descuento dos veces al mismo producto
-            if (descuentosAplicados.contains(clave)) {
-                yaAplicados++;
-                continue;
+                String clave = detalle.getIdOrdenProducto() + "|" + descuentoSeleccionado;
+
+                // No aplicar el mismo descuento dos veces al mismo producto
+                if (descuentosAplicados.contains(clave)) {
+                    yaAplicados++;
+                    continue;
+                }
+
+                DescuentoProducto dp = descuentoProductoService.buscarAplicable(
+                        detalle.getIdProducto(), descuentoSeleccionado, fechaOrden);
+
+                if (dp == null) {
+                    motivos = motivos + " " + nombreProducto(detalle.getIdProducto()) + ": "
+                            + descuentoProductoService.motivoNoAplica(
+                                    detalle.getIdProducto(), descuentoSeleccionado, fechaOrden) + ".";
+                    continue;
+                }
+
+                // El porcentaje se calcula sobre el precio actual de la linea, es decir,
+                // sobre el precio que quedo despues de los descuentos anteriores
+                BigDecimal monto = detalle.getPrecio()
+                        .multiply(BigDecimal.valueOf(dp.getValor()))
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+
+                // El precio no puede quedar negativo
+                if (monto.compareTo(detalle.getPrecio()) > 0) {
+                    monto = detalle.getPrecio();
+                }
+
+                detalle.setPrecio(detalle.getPrecio().subtract(monto));
+
+                String comentario = "Descuento " + descuento.getNombre() + " "
+                        + dp.getValor() + "%: -$" + monto;
+
+                if (detalle.getObservaciones() == null) {
+                    detalle.setObservaciones(comentario);
+                } else {
+                    detalle.setObservaciones(detalle.getObservaciones() + " | " + comentario);
+                }
+
+                descuentosAplicados.add(clave);
+                aplicados++;
             }
 
-            DescuentoProducto dp = descuentoProductoService.buscarAplicable(
-                    detalle.getIdProducto(), descuentoSeleccionado, fechaOrden);
-
-            if (dp == null) {
-                motivos = motivos + " " + nombreProducto(detalle.getIdProducto()) + ": "
-                        + descuentoProductoService.motivoNoAplica(
-                                detalle.getIdProducto(), descuentoSeleccionado, fechaOrden) + ".";
-                continue;
-            }
-
-            // El porcentaje se calcula sobre el precio sugerido del producto
-            Producto producto = productoService.buscarPorId(detalle.getIdProducto());
-
-            BigDecimal monto = producto.getPrecioSugerido()
-                    .multiply(BigDecimal.valueOf(dp.getValor()))
-                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
-
-            // El precio no puede quedar negativo
-            if (monto.compareTo(detalle.getPrecio()) > 0) {
-                monto = detalle.getPrecio();
-            }
-
-            detalle.setPrecio(detalle.getPrecio().subtract(monto));
-
-            String comentario = "Descuento " + descuento.getNombre() + " "
-                    + dp.getValor() + "%: -$" + monto;
-
-            if (detalle.getObservaciones() == null) {
-                detalle.setObservaciones(comentario);
+            if (aplicados == 0 && yaAplicados > 0) {
+                mensaje(FacesMessage.SEVERITY_WARN,
+                        "El descuento \"" + descuento.getNombre() + "\" ya estaba aplicado.");
+            } else if (aplicados == 0) {
+                mensaje(FacesMessage.SEVERITY_WARN,
+                        "El descuento \"" + descuento.getNombre()
+                        + "\" no se aplicó a ningún producto (fecha de la orden: "
+                        + fechaOrdenTexto + ")." + motivos);
             } else {
-                detalle.setObservaciones(detalle.getObservaciones() + " | " + comentario);
+                mensaje(FacesMessage.SEVERITY_INFO,
+                        "Descuento \"" + descuento.getNombre() + "\" aplicado a "
+                        + aplicados + " producto(s).");
+
+                if (!motivos.isEmpty()) {
+                    mensaje(FacesMessage.SEVERITY_WARN, "No se aplicó a:" + motivos);
+                }
             }
 
-            descuentosAplicados.add(clave);
-            aplicados++;
-        }
-
-        if (aplicados == 0 && yaAplicados > 0) {
-            mensaje(FacesMessage.SEVERITY_WARN,
-                    "El descuento \"" + descuento.getNombre() + "\" ya estaba aplicado.");
-        } else if (aplicados == 0) {
-            mensaje(FacesMessage.SEVERITY_WARN,
-                    "El descuento \"" + descuento.getNombre()
-                    + "\" no se aplicó a ningún producto (fecha de la orden: "
-                    + fechaOrdenTexto + ")." + motivos);
-        } else {
-            mensaje(FacesMessage.SEVERITY_INFO,
-                    "Descuento \"" + descuento.getNombre() + "\" aplicado a "
-                    + aplicados + " producto(s).");
-
-            if (!motivos.isEmpty()) {
-                mensaje(FacesMessage.SEVERITY_WARN, "No se aplicó a:" + motivos);
-            }
+        } catch (Exception e) {
+            mensaje(FacesMessage.SEVERITY_ERROR,
+                    "No se pudo aplicar el descuento. Motivo: " + e.getMessage());
         }
     }
 
@@ -455,7 +452,6 @@ public class ordenBean implements Serializable {
         return total;
     }
 
-    @Transactional
     public void guardarOrden() {
 
         if (empleadoSeleccionado == null) {
@@ -495,24 +491,16 @@ public class ordenBean implements Serializable {
             return;
         }
 
-        // 1. Crear la orden
+        // 1. Armar la orden con sus productos
         orden.setIdOrden(UUID.randomUUID());
         orden.setIdEmpleadoRol(empleadoRol.getIdEmpleadoRol());
         orden.setFechaCreacion(fechaOrden);
 
-        ordenService.guardar(orden);
-
-        // 2. Guardar los productos de la orden
         for (OrdenProducto detalle : productosOrden) {
-
             detalle.setIdOrden(orden.getIdOrden());
-
-            ordenProductoService.guardar(detalle);
         }
 
-        ordenProductoService.flush();
-
-        // 3. Crear la factura
+        // 2. Armar la factura
         Factura factura = new Factura();
 
         factura.setIdFactura(UUID.randomUUID());
@@ -523,9 +511,9 @@ public class ordenBean implements Serializable {
         factura.setEstado("PENDIENTE");
         factura.setObservaciones(null);
 
-        facturaService.guardar(factura);
+        // 3. Relacionar la factura con cada producto de la orden
+        List<FacturaOrdenProducto> detallesFactura = new ArrayList<>();
 
-        // 4. Relacionar la factura con cada producto de la orden
         for (OrdenProducto detalle : productosOrden) {
 
             FacturaOrdenProducto facturaDetalle =
@@ -539,7 +527,16 @@ public class ordenBean implements Serializable {
             facturaDetalle.setPrecio(detalle.getPrecio());
             facturaDetalle.setObservaciones(detalle.getObservaciones());
 
-            facturaOrdenProductoService.guardar(facturaDetalle);
+            detallesFactura.add(facturaDetalle);
+        }
+
+        // 4. Guardar todo junto: si algo falla no se guarda nada
+        try {
+            ordenService.guardarCompleta(orden, productosOrden, factura, detallesFactura);
+        } catch (Exception e) {
+            mensaje(FacesMessage.SEVERITY_ERROR,
+                    "No se pudo guardar la orden, no se guardó nada. Motivo: " + e.getMessage());
+            return;
         }
 
         // 5. Limpiar la pantalla

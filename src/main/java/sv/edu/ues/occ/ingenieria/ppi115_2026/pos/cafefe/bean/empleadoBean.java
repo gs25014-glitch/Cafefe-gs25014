@@ -131,10 +131,15 @@ public class empleadoBean implements Serializable {
             return;
         }
 
-        empleadoService.guardarConRol(
-                empleado,
-                idRolSeleccionado
-        );
+        try {
+            empleadoService.guardarConRol(
+                    empleado,
+                    idRolSeleccionado
+            );
+        } catch (Exception e) {
+            mensajeError("No se pudo guardar el empleado. Revise los datos e intente de nuevo.");
+            return;
+        }
 
         empleados = empleadoService.listar();
 
@@ -169,9 +174,15 @@ public class empleadoBean implements Serializable {
 
     public void actualizar() {
 
-        empleadoService.actualizar(
-                empleadoSeleccionado
-        );
+        try {
+            empleadoService.actualizar(
+                    empleadoSeleccionado
+            );
+        } catch (IllegalArgumentException e) {
+            mensajeError(e.getMessage());
+        } catch (Exception e) {
+            mensajeError("No se pudo actualizar el empleado. Revise los datos e intente de nuevo.");
+        }
 
         empleados = empleadoService.listar();
 
@@ -200,9 +211,15 @@ public class empleadoBean implements Serializable {
 
     public void eliminar(Empleado empleado) {
 
-        empleadoService.eliminar(
-                empleado.getIdEmpleado()
-        );
+        try {
+            empleadoService.eliminar(
+                    empleado.getIdEmpleado()
+            );
+        } catch (Exception e) {
+            // Pasa si el empleado tiene rol asignado u órdenes
+            mensajeError("No se puede eliminar a " + empleado.getNombre()
+                    + " porque tiene registros relacionados (rol u órdenes).");
+        }
 
         empleados = empleadoService.listar();
     }

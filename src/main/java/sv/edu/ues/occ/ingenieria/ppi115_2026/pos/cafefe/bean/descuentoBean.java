@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -152,10 +153,21 @@ public class descuentoBean implements Serializable {
             cargarTiposActivos();
             nuevo();
 
-        } catch (Exception e) {
+        } catch (DateTimeParseException e) {
 
             mostrarError(
                     "Seleccione fechas válidas usando el calendario."
+            );
+
+        } catch (IllegalArgumentException e) {
+
+            // Por ejemplo: el descuento que se edita ya no existe
+            mostrarError(e.getMessage());
+
+        } catch (Exception e) {
+
+            mostrarError(
+                    "No se pudo guardar el descuento. Revise los datos e intente de nuevo."
             );
         }
     }
@@ -200,7 +212,12 @@ public class descuentoBean implements Serializable {
 
     public void eliminar(UUID id) {
 
-        descuentoService.eliminar(id);
+        try {
+            descuentoService.eliminar(id);
+        } catch (Exception e) {
+            // Pasa si el descuento está asignado a un producto
+            mostrarError("No se puede eliminar el descuento porque está asignado a un producto.");
+        }
 
         cargarDescuentos();
 

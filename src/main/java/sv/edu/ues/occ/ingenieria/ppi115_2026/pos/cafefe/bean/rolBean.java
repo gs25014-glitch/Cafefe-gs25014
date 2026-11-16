@@ -51,10 +51,17 @@ public class rolBean implements Serializable {
 
     public void guardar() {
 
-        if (editando) {
-            rolService.actualizar(rol);
-        } else {
-            rolService.guardar(rol);
+        try {
+            if (editando) {
+                rolService.actualizar(rol);
+            } else {
+                rolService.guardar(rol);
+            }
+        } catch (IllegalArgumentException e) {
+            // Por ejemplo: el rol que se edita ya no existe
+            mensajeError(e.getMessage());
+        } catch (Exception e) {
+            mensajeError("No se pudo guardar el rol. Revise los datos e intente de nuevo.");
         }
 
         cargarRoles();
@@ -105,4 +112,4 @@ public class rolBean implements Serializable {
     public boolean isEditando() {
         return editando;
     }
-}   
+}

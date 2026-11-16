@@ -112,56 +112,43 @@ public class caracteristicaBean implements Serializable {
 
         if (idTipoSeleccionado == null) {
 
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
-                    new FacesMessage(
-                            FacesMessage.SEVERITY_ERROR,
-                            "Error",
-                            "Debe seleccionar un tipo de característica."
-                    )
-            );
+            mensajeError("Debe seleccionar un tipo de característica.");
 
             return;
         }
 
         if (!caracteristicaService.tipoActivo(idTipoSeleccionado)) {
 
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
-                    new FacesMessage(
-                            FacesMessage.SEVERITY_ERROR,
-                            "Error",
-                            "No se puede utilizar un tipo de característica inactivo."
-                    )
-            );
+            mensajeError("No se puede utilizar un tipo de característica inactivo.");
 
             return;
         }
 
         caracteristica.setIdTipoCaracteristica(idTipoSeleccionado);
 
-        if (editando) {
+        try {
 
-            caracteristicaService.actualizar(caracteristica);
+            if (editando) {
 
-        } else {
+                caracteristicaService.actualizar(caracteristica);
 
-            boolean guardada =
-                    caracteristicaService.guardar(caracteristica);
+            } else {
 
-            if (!guardada) {
+                boolean guardada =
+                        caracteristicaService.guardar(caracteristica);
 
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
-                        new FacesMessage(
-                                FacesMessage.SEVERITY_ERROR,
-                                "Error",
-                                "No se pudo guardar la característica."
-                        )
-                );
-
-                return;
+                if (!guardada) {
+                    mensajeError("No se pudo guardar la característica.");
+                    return;
+                }
             }
+
+        } catch (IllegalArgumentException e) {
+            mensajeError(e.getMessage());
+            return;
+        } catch (Exception e) {
+            mensajeError("No se pudo guardar la característica. Revise los datos e intente de nuevo.");
+            return;
         }
 
         cargarCaracteristicas();
@@ -181,11 +168,23 @@ public class caracteristicaBean implements Serializable {
 
     public void eliminar(UUID id) {
 
-        caracteristicaService.eliminar(id);
+        try {
+            caracteristicaService.eliminar(id);
+        } catch (Exception e) {
+            // Pasa si la característica ya está asignada a un producto
+            mensajeError("No se puede eliminar la característica porque está asignada a un producto.");
+        }
 
         cargarCaracteristicas();
 
         nuevo();
+    }
+
+    private void mensajeError(String texto) {
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, texto, null));
     }
 
     public void cancelar() {

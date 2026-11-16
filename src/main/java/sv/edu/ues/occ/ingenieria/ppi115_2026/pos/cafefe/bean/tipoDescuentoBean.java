@@ -1,4 +1,13 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.bean;
+
+/**
+ *
+ * @author kelvi
+ */
 
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
@@ -50,37 +59,21 @@ public class tipoDescuentoBean implements Serializable {
 
     public void guardar() {
 
-        if (tipoDescuento.getNombre() == null
-                || tipoDescuento.getNombre().trim().isEmpty()) {
+        try {
 
-            mensajeError("Debe ingresar el nombre del tipo de descuento.");
-            return;
-        }
+            if (editando) {
 
-        if (tipoDescuento.getDescuentoMaximo() == null) {
+                tipoDescuentoService.actualizar(tipoDescuento);
 
-            mensajeError("Debe ingresar el límite máximo de descuento.");
-            return;
-        }
+            } else {
 
-        if (tipoDescuento.getDescuentoMaximo() < 0
-                || tipoDescuento.getDescuentoMaximo() > 100) {
+                tipoDescuentoService.guardar(tipoDescuento);
+            }
 
-            mensajeError("El límite máximo debe estar entre 0 y 100.");
-            return;
-        }
-
-        if (editando) {
-
-            tipoDescuentoService.actualizar(tipoDescuento);
-
-            mensajeExito("Tipo de descuento actualizado correctamente.");
-
-        } else {
-
-            tipoDescuentoService.guardar(tipoDescuento);
-
-            mensajeExito("Tipo de descuento guardado correctamente.");
+        } catch (IllegalArgumentException e) {
+            mensajeError(e.getMessage());
+        } catch (Exception e) {
+            mensajeError("No se pudo guardar el tipo de descuento. Revise los datos e intente de nuevo.");
         }
 
         cargarTipos();
@@ -97,48 +90,26 @@ public class tipoDescuentoBean implements Serializable {
     public void eliminar(UUID id) {
 
         try {
-
             tipoDescuentoService.eliminar(id);
-
-            mensajeExito("Tipo de descuento eliminado correctamente.");
-
         } catch (Exception e) {
-
-            mensajeError(
-                    "No se puede eliminar el tipo de descuento porque está siendo utilizado."
-            );
+            // Pasa si el tipo ya lo usa algún descuento
+            mensajeError("No se puede eliminar el tipo porque lo usa algún descuento.");
         }
 
         cargarTipos();
         nuevo();
     }
 
+    private void mensajeError(String texto) {
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, texto, null));
+    }
+
+
     public void cancelar() {
         nuevo();
-    }
-
-    private void mensajeError(String mensaje) {
-
-        FacesContext.getCurrentInstance().addMessage(
-                null,
-                new FacesMessage(
-                        FacesMessage.SEVERITY_ERROR,
-                        mensaje,
-                        null
-                )
-        );
-    }
-
-    private void mensajeExito(String mensaje) {
-
-        FacesContext.getCurrentInstance().addMessage(
-                null,
-                new FacesMessage(
-                        FacesMessage.SEVERITY_INFO,
-                        mensaje,
-                        null
-                )
-        );
     }
 
     public List<TipoDescuento> getTiposDescuento() {

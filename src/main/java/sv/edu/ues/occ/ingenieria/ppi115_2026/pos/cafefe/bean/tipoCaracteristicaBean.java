@@ -10,6 +10,8 @@ package sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.bean;
  */
 
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -59,17 +61,25 @@ public class tipoCaracteristicaBean implements Serializable {
 
     public void guardar() {
 
-        if (editando) {
+        try {
 
-            tipoCaracteristicaService.actualizar(
-                    tipoCaracteristica
-            );
+            if (editando) {
 
-        } else {
+                tipoCaracteristicaService.actualizar(
+                        tipoCaracteristica
+                );
 
-            tipoCaracteristicaService.guardar(
-                    tipoCaracteristica
-            );
+            } else {
+
+                tipoCaracteristicaService.guardar(
+                        tipoCaracteristica
+                );
+            }
+
+        } catch (IllegalArgumentException e) {
+            mensajeError(e.getMessage());
+        } catch (Exception e) {
+            mensajeError("No se pudo guardar el tipo de característica. Revise los datos e intente de nuevo.");
         }
 
         cargarTipos();
@@ -85,12 +95,25 @@ public class tipoCaracteristicaBean implements Serializable {
 
     public void eliminar(UUID id) {
 
-        tipoCaracteristicaService.eliminar(id);
+        try {
+            tipoCaracteristicaService.eliminar(id);
+        } catch (Exception e) {
+            // Pasa si el tipo ya lo usa alguna característica
+            mensajeError("No se puede eliminar el tipo porque lo usa alguna característica.");
+        }
 
         cargarTipos();
 
         nuevo();
     }
+
+    private void mensajeError(String texto) {
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, texto, null));
+    }
+
 
     public void cancelar() {
         nuevo();

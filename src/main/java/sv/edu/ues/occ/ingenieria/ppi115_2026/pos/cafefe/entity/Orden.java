@@ -30,6 +30,10 @@ public class Orden {
     @Column(name = "fecha_creacion")
     private OffsetDateTime fechaCreacion;
 
+    // true cuando el barista o cocinero ya preparo y despacho la orden
+    @Column(name = "lista", nullable = false)
+    private boolean lista;
+
     public Orden() {
     }
 
@@ -55,5 +59,13 @@ public class Orden {
 
     public void setFechaCreacion(OffsetDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public boolean isLista() {
+        return lista;
+    }
+
+    public void setLista(boolean lista) {
+        this.lista = lista;
     }
 }
