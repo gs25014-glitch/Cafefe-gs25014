@@ -166,6 +166,11 @@ public class ordenBean implements Serializable {
     // "Nombre Apellido - Rol" del empleado que tomó la orden
     public String empleadoDeOrden(Orden o) {
 
+        // Las ordenes que hace un cliente desde la aplicacion web no tienen empleado
+        if (o.getIdEmpleadoRol() == null) {
+            return "Cliente (aplicación web)";
+        }
+
         EmpleadoRol empleadoRol = empleadoRolService.buscarPorId(o.getIdEmpleadoRol());
 
         if (empleadoRol == null) {
@@ -174,6 +179,10 @@ public class ordenBean implements Serializable {
 
         Empleado empleado = empleadoService.buscarPorId(empleadoRol.getIdEmpleado());
         Rol rol = rolService.buscarPorId(empleadoRol.getIdRol());
+
+        if (empleado == null || rol == null) {
+            return "";
+        }
 
         return empleado.getNombre() + " " + empleado.getApellido() + " - " + rol.getNombre();
     }

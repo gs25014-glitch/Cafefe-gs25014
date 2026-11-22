@@ -24,7 +24,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
     <h1>Empleados - Cafefe</h1>
 
-    <h2>Crear empleado</h2>
+    <h:messages infoClass="msg-info" warnClass="msg-warn" errorClass="msg-error" globalOnly="true" />
+
+    <h2>#{empleadoBean.editando ? 'Editar empleado' : 'Crear empleado'}</h2>
 
     <h:form>
 
@@ -72,7 +74,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
         <h:selectOneMenu id="rol"
                          value="#{empleadoBean.idRolSeleccionado}"
-                         required="true"
+                         disabled="#{empleadoBean.editando}"
+                         required="#{not empleadoBean.editando}"
                          requiredMessage="Debe seleccionar un rol">
 
             <f:selectItem
@@ -99,11 +102,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
         <br /><br />
 
-        <h:messages infoClass="msg-info" warnClass="msg-warn" errorClass="msg-error" globalOnly="true" />
+        <h:commandButton
+            value="#{empleadoBean.editando ? 'Guardar cambios' : 'Guardar empleado'}"
+            action="#{empleadoBean.guardar}" />
 
         <h:commandButton
-            value="Guardar empleado"
-            action="#{empleadoBean.guardar}" />
+            value="Cancelar"
+            action="#{empleadoBean.cancelar}"
+            immediate="true" />
 
     </h:form>
 
@@ -203,85 +209,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         </h:dataTable>
 
     </h:form>
-
-    <h:panelGroup
-        rendered="#{empleadoBean.empleadoSeleccionado != null}">
-
-        <hr />
-
-        <h2>Editar empleado</h2>
-
-        <h:form>
-
-            <h:outputLabel
-                for="nombreEditar"
-                value="Nombre:" />
-
-            <h:inputText
-                id="nombreEditar"
-                value="#{empleadoBean.empleadoSeleccionado.nombre}"
-                required="true"
-                requiredMessage="El nombre es obligatorio." />
-
-            <h:message errorClass="msg-error" for="nombreEditar" />
-
-            <br /><br />
-
-            <h:outputLabel
-                for="apellidoEditar"
-                value="Apellido:" />
-
-            <h:inputText
-                id="apellidoEditar"
-                value="#{empleadoBean.empleadoSeleccionado.apellido}"
-                required="true"
-                requiredMessage="El apellido es obligatorio." />
-
-            <h:message errorClass="msg-error" for="apellidoEditar" />
-
-            <br /><br />
-
-            <h:outputLabel
-                for="activoEditar"
-                value="Activo:" />
-
-            <h:selectBooleanCheckbox
-                id="activoEditar"
-                value="#{empleadoBean.empleadoSeleccionado.activo}" />
-
-            <br /><br />
-
-            <h:outputLabel for="rolEditar" value="Rol:" />
-
-            <h:selectOneMenu
-                id="rolEditar"
-                value="#{empleadoBean.idRolEditar}"
-                disabled="true">
-
-                <f:selectItems
-                    value="#{empleadoBean.opcionesRoles}" />
-
-            </h:selectOneMenu>
-
-            <br /><br />
-
-            <h:outputLabel
-                for="comentariosEditar"
-                value="Comentarios:" />
-
-            <h:inputTextarea
-                id="comentariosEditar"
-                value="#{empleadoBean.empleadoSeleccionado.comentarios}" />
-
-            <br /><br />
-
-            <h:commandButton
-                value="Guardar cambios"
-                action="#{empleadoBean.actualizar}" />
-
-        </h:form>
-
-    </h:panelGroup>
 
     </div>
 

@@ -10,6 +10,8 @@
 package sv.edu.ues.occ.ingenieria.ppi115_2026.pos.cafefe.bean;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -30,12 +32,21 @@ public class cajaBean implements Serializable {
 
     private List<Caja> cajas;
     private Caja caja;
-    private Caja cajaSeleccionada;
+
+    // true cuando el formulario esta editando una caja de la lista
+    private boolean editando;
 
     @PostConstruct
     public void inicializar() {
         cajas = cajaService.listar();
+        nueva();
+    }
+
+    public void nueva() {
         caja = new Caja();
+        caja.setIdCaja(UUID.randomUUID());
+        caja.setActivo(true);
+        editando = false;
     }
 
     public List<Caja> getCajas() {
@@ -46,35 +57,58 @@ public class cajaBean implements Serializable {
         return caja;
     }
 
-    public Caja getCajaSeleccionada() {
-        return cajaSeleccionada;
+    public boolean isEditando() {
+        return editando;
     }
 
     public void guardar() {
-        caja.setIdCaja(UUID.randomUUID());
 
-        cajaService.guardar(caja);
-
-        cajas = cajaService.listar();
-
-        caja = new Caja();
-    }
-
-    public void editar(Caja caja) {
-        cajaSeleccionada = caja;
-    }
-
-    public void actualizar() {
-        cajaService.actualizar(cajaSeleccionada);
+        // Con el mismo formulario se crea o se edita
+        try {
+            if (editando) {
+                cajaService.actualizar(caja);
+            } else {
+                cajaService.guardar(caja);
+            }
+        } catch (Exception e) {
+            mensajeError("No se pudo guardar la caja. Revise los datos e intente de nuevo.");
+            return;
+        }
 
         cajas = cajaService.listar();
 
-        cajaSeleccionada = null;
+        nueva();
     }
 
-    public void eliminar(Caja caja) {
-        cajaService.eliminar(caja.getIdCaja());
+    public void editar(Caja cajaSeleccionada) {
+        // El formulario de arriba pasa a mostrar los datos de la caja
+        caja = cajaSeleccionada;
+        editando = true;
+    }
+
+    public void cancelar() {
+        // Se vuelve a leer la lista por si se cambio algo sin guardar
+        cajas = cajaService.listar();
+        nueva();
+    }
+
+    public void eliminar(Caja cajaEliminar) {
+        try {
+            cajaService.eliminar(cajaEliminar.getIdCaja());
+        } catch (Exception e) {
+            // Pasa si la caja ya tiene facturas
+            mensajeError("No se puede eliminar la caja porque tiene facturas.");
+        }
 
         cajas = cajaService.listar();
+
+        nueva();
+    }
+
+    private void mensajeError(String texto) {
+
+        FacesContext.getCurrentInstance().addMessage(
+                null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, texto, null));
     }
 }

@@ -1,0 +1,29 @@
+{
+    "name": "Cafefe",
+    "short_name": "Cafefe",
+    "description": "Ordenes y pagos de la cafeteria Cafefe",
+    "lang": "es",
+    "start_url": "./",
+    "scope": "./",
+    "display": "fullscreen",
+    "background_color": "#fff8f0",
+    "theme_color": "#4e2f20",
+    "icons": [
+        {
+            "src": "resources/imagenes/icono_192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "resources/imagenes/icono_512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "resources/imagenes/icono_maskable_512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

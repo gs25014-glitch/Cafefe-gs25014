@@ -48,12 +48,11 @@ public class empleadoBean implements Serializable {
     private List<SelectItem> opcionesRoles;
 
     private Empleado empleado;
-    private Empleado empleadoSeleccionado;
 
     private UUID idRolSeleccionado;
 
-    // Al editar el rol solo se muestra (deshabilitado)
-    private UUID idRolEditar;
+    // true cuando el formulario esta editando un empleado de la lista (el rol solo se muestra)
+    private boolean editando;
 
     @PostConstruct
     public void inicializar() {
@@ -87,6 +86,8 @@ public class empleadoBean implements Serializable {
         empleado.setActivo(true);
 
         idRolSeleccionado = null;
+
+        editando = false;
     }
 
     public List<Empleado> getEmpleados() {
@@ -105,10 +106,6 @@ public class empleadoBean implements Serializable {
         return empleado;
     }
 
-    public Empleado getEmpleadoSeleccionado() {
-        return empleadoSeleccionado;
-    }
-
     public UUID getIdRolSeleccionado() {
         return idRolSeleccionado;
     }
@@ -117,7 +114,17 @@ public class empleadoBean implements Serializable {
         this.idRolSeleccionado = idRolSeleccionado;
     }
 
+    public boolean isEditando() {
+        return editando;
+    }
+
     public void guardar() {
+
+        // Con el mismo formulario se crea o se edita
+        if (editando) {
+            actualizar();
+            return;
+        }
 
         if (idRolSeleccionado == null) {
             mensajeError("Debe seleccionar un rol.");
@@ -146,15 +153,26 @@ public class empleadoBean implements Serializable {
         nuevoEmpleado();
     }
 
-    public void editar(Empleado empleado) {
+    public void editar(Empleado empleadoSeleccionado) {
 
-        empleadoSeleccionado = empleado;
+        // El formulario de arriba pasa a mostrar los datos del empleado
+        empleado = empleadoSeleccionado;
 
         // Se busca su rol actual para mostrarlo deshabilitado
         EmpleadoRol empleadoRol =
                 empleadoRolService.buscarActivoPorEmpleado(empleado.getIdEmpleado());
 
-        idRolEditar = empleadoRol == null ? null : empleadoRol.getIdRol();
+        idRolSeleccionado = empleadoRol == null ? null : empleadoRol.getIdRol();
+
+        editando = true;
+    }
+
+    public void cancelar() {
+
+        // Se vuelve a leer la lista por si se cambio algo sin guardar
+        empleados = empleadoService.listar();
+
+        nuevoEmpleado();
     }
 
     private void mensajeError(String texto) {
@@ -164,29 +182,21 @@ public class empleadoBean implements Serializable {
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, texto, null));
     }
 
-    public UUID getIdRolEditar() {
-        return idRolEditar;
-    }
-
-    public void setIdRolEditar(UUID idRolEditar) {
-        this.idRolEditar = idRolEditar;
-    }
-
-    public void actualizar() {
+    private void actualizar() {
 
         try {
-            empleadoService.actualizar(
-                    empleadoSeleccionado
-            );
+            empleadoService.actualizar(empleado);
         } catch (IllegalArgumentException e) {
             mensajeError(e.getMessage());
+            return;
         } catch (Exception e) {
             mensajeError("No se pudo actualizar el empleado. Revise los datos e intente de nuevo.");
+            return;
         }
 
         empleados = empleadoService.listar();
 
-        empleadoSeleccionado = null;
+        nuevoEmpleado();
     }
 
     public String obtenerNombreRol(UUID idEmpleado) {
@@ -222,5 +232,7 @@ public class empleadoBean implements Serializable {
         }
 
         empleados = empleadoService.listar();
+
+        nuevoEmpleado();
     }
 }

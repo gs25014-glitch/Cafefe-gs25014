@@ -21,7 +21,7 @@
 
     <h:messages infoClass="msg-info" warnClass="msg-warn" errorClass="msg-error" globalOnly="true" />
 
-    <h2>Crear tipo de producto</h2>
+    <h2>#{tipoProductoBean.editando ? 'Editar tipo de producto' : 'Crear tipo de producto'}</h2>
 
     <h:form>
 
@@ -52,8 +52,13 @@
         <br /><br />
 
         <h:commandButton
-            value="Guardar tipo de producto"
+            value="#{tipoProductoBean.editando ? 'Guardar cambios' : 'Guardar tipo de producto'}"
             action="#{tipoProductoBean.guardar}" />
+
+        <h:commandButton
+            value="Cancelar"
+            action="#{tipoProductoBean.cancelar}"
+            immediate="true" />
 
     </h:form>
 
@@ -105,49 +110,6 @@
         </h:dataTable>
 
     </h:form>
-
-    <h:panelGroup
-        rendered="#{tipoProductoBean.tipoProductoSeleccionado != null}">
-
-        <hr />
-
-        <h2>Editar tipo de producto</h2>
-
-        <h:form>
-
-            <h:outputLabel value="Nombre:" />
-
-            <h:inputText
-                id="nombreEditar"
-                value="#{tipoProductoBean.tipoProductoSeleccionado.nombre}"
-                required="true"
-                requiredMessage="El nombre es obligatorio." />
-
-            <h:message errorClass="msg-error" for="nombreEditar" />
-
-            <br /><br />
-
-            <h:outputLabel value="Activo:" />
-
-            <h:selectBooleanCheckbox
-                value="#{tipoProductoBean.tipoProductoSeleccionado.activo}" />
-
-            <br /><br />
-
-            <h:outputLabel value="Observaciones:" />
-
-            <h:inputTextarea
-                value="#{tipoProductoBean.tipoProductoSeleccionado.observaciones}" />
-
-            <br /><br />
-
-            <h:commandButton
-                value="Guardar cambios"
-                action="#{tipoProductoBean.actualizar}" />
-
-        </h:form>
-
-    </h:panelGroup>
 
     </div>
 

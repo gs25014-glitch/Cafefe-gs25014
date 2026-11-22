@@ -24,7 +24,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
     <h1>Cajas - Cafefe</h1>
 
-    <h2>Crear caja</h2>
+    <h:messages infoClass="msg-info" warnClass="msg-warn" errorClass="msg-error" globalOnly="true" />
+
+    <h2>#{cajaBean.editando ? 'Editar caja' : 'Crear caja'}</h2>
 
     <h:form>
 
@@ -55,8 +57,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         <br /><br />
 
         <h:commandButton
-            value="Guardar caja"
+            value="#{cajaBean.editando ? 'Guardar cambios' : 'Guardar caja'}"
             action="#{cajaBean.guardar}" />
+
+        <h:commandButton
+            value="Cancelar"
+            action="#{cajaBean.cancelar}"
+            immediate="true" />
 
     </h:form>
 
@@ -64,14 +71,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
     <h2>Lista de cajas</h2>
 
-    <h:form id="formLista">
-
-        <h:messages infoClass="msg-info" warnClass="msg-warn" errorClass="msg-error"
-            for="tablaCajas" />
+    <h:form>
 
         <h:dataTable
             styleClass="tabla"
-            id="tablaCajas"
             value="#{cajaBean.cajas}"
             var="caja">
 
@@ -108,49 +111,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         </h:dataTable>
 
     </h:form>
-
-    <h:panelGroup
-        rendered="#{cajaBean.cajaSeleccionada != null}">
-
-        <hr />
-
-        <h2>Editar caja</h2>
-
-        <h:form>
-
-            <h:outputLabel value="Nombre:" />
-
-            <h:inputText
-                id="nombreEditar"
-                value="#{cajaBean.cajaSeleccionada.nombre}"
-                required="true"
-                requiredMessage="El nombre de la caja es obligatorio." />
-
-            <h:message errorClass="msg-error" for="nombreEditar" />
-
-            <br /><br />
-
-            <h:outputLabel value="Activo:" />
-
-            <h:selectBooleanCheckbox
-                value="#{cajaBean.cajaSeleccionada.activo}" />
-
-            <br /><br />
-
-            <h:outputLabel value="Observaciones:" />
-
-            <h:inputTextarea
-                value="#{cajaBean.cajaSeleccionada.observaciones}" />
-
-            <br /><br />
-
-            <h:commandButton
-                value="Guardar cambios"
-                action="#{cajaBean.actualizar}" />
-
-        </h:form>
-
-    </h:panelGroup>
 
     </div>
 

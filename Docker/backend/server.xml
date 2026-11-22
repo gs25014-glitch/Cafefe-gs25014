@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<server description="Servidor Cafefe (tercer parcial)">
+
+    <featureManager>
+        <feature>webProfile-11.0</feature>
+    </featureManager>
+
+    <!-- Variables de entorno de la base de datos (docker run -e PG_USER=...).
+         El valor de defaultValue solo se usa si la variable de entorno no existe. -->
+    <variable name="PG_USER" defaultValue="postgres"/>
+    <variable name="PG_PASS" defaultValue="postgres"/>
+    <variable name="PG_DB"   defaultValue="cafefe"/>
+    <variable name="PG_HOST" defaultValue="localhost"/>
+    <variable name="PG_PORT" defaultValue="5432"/>
+
+    <httpEndpoint
+        id="defaultHttpEndpoint"
+        host="*"
+        httpPort="9080"
+        httpsPort="9443"
+    />
+
+    <library id="PostgresLib">
+        <fileset
+            dir="${server.config.dir}/lib"
+            includes="postgresql-42.7.13.jar"
+        />
+    </library>
+
+    <dataSource jndiName="jdbc/CafefeDS">
+
+        <jdbcDriver libraryRef="PostgresLib" />
+
+        <properties.postgresql
+            databaseName="${PG_DB}"
+            serverName="${PG_HOST}"
+            portNumber="${PG_PORT}"
+            user="${PG_USER}"
+            password="${PG_PASS}"
+        />
+
+    </dataSource>
+
+</server>
