@@ -23,7 +23,12 @@ RUN /home/usuario/wlp/bin/server create cafefe \
 
 # Driver de PostgreSQL (el mismo que usa el proyecto) y configuracion del servidor
 COPY src/main/liberty/config/lib/postgresql-42.7.13.jar /home/usuario/wlp/usr/servers/cafefe/lib/postgresql-42.7.13.jar
-COPY docker/backend/server.xml /home/usuario/wlp/usr/servers/cafefe/server.xml
+COPY Docker/backend/server.xml /home/usuario/wlp/usr/servers/cafefe/server.xml
+
+# Java 17+ no deja crear proxies de CDI sin esta opcion (error WELD-001524)
+RUN echo "--add-opens=java.base/java.lang=ALL-UNNAMED" > /home/usuario/wlp/usr/servers/cafefe/jvm.options
+
+ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 
 EXPOSE 9080
 
